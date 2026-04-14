@@ -1,0 +1,98 @@
+##################################################
+# ROOT
+##################################################
+
+# Environment variables (shared)
+.env
+.env.*
+!.env.example
+.env.local
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+##################################################
+# DOCKER
+##################################################
+
+docker-compose.override.yml
+
+##################################################
+# FRONTEND (Next.js)
+##################################################
+
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.turbo/
+
+# Next.js env
+frontend/.env*
+!frontend/.env.example
+
+# Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+##################################################
+# BACKEND (Laravel)
+##################################################
+
+backend/vendor/
+backend/node_modules/
+
+# Laravel env
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Laravel storage (keep structure, ignore files)
+backend/storage/*.key
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*.php
+
+# Laravel public build files
+backend/public/storage
+backend/public/hot
+backend/public/build
+
+# PHPUnit
+backend/.phpunit.result.cache
+
+##################################################
+# DATABASE / FILES
+##################################################
+
+*.sqlite
+*.db
+
+##################################################
+# MISC
+##################################################
+
+coverage/
+dist/
+tmp/
+temp/
+.cache/
