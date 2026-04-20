@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Services\AuditLogService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -11,8 +13,10 @@ use Illuminate\Support\Facades\Hash;
  */
 class UserService
 {
-    public function __construct(private readonly UserRepository $userRepository)
-    {
+    public function __construct(
+        private readonly UserRepository $userRepository,
+        private readonly AuditLogService $auditLogService,
+    ) {
     }
 
     /**
@@ -40,7 +44,21 @@ class UserService
     {
         $payload['password'] = Hash::make($payload['password']);
 
-        return $this->userRepository->create($payload)->load('role');
+        $user = $this->userRepository->create($payload)->load('role');
+
+        $this->auditLogService->log(
+            Auth::id(),
+            'user.created',
+            'user',
+            (string) $user->id,
+            [
+                'name' => $user->name,
+                'email' => $user->email,
+                'role_id' => $user->role_id,
+            ],
+        );
+
+        return $user;
     }
 
     /**
@@ -63,8 +81,21 @@ class UserService
         }
 
         $user = $this->userRepository->findOrFail($id);
+        $updatedUser = $this->userRepository->update($user, $payload);
 
-        return $this->userRepository->update($user, $payload);
+        $this->auditLogService->log(
+            Auth::id(),
+            'user.updated',
+            'user',
+            (string) $updatedUser->id,
+            [
+                'name' => $updatedUser->name,
+                'email' => $updatedUser->email,
+                'role_id' => $updatedUser->role_id,
+            ],
+        );
+
+        return $updatedUser;
     }
 
     /**
@@ -74,5 +105,17 @@ class UserService
     {
         $user = $this->userRepository->findOrFail($id);
         $this->userRepository->delete($user);
+
+        $this->auditLogService->log(
+            Auth::id(),
+            'user.deleted',
+            'user',
+            (string) $user->id,
+            [
+                'name' => $user->name,
+                'email' => $user->email,
+                'role_id' => $user->role_id,
+            ],
+        );
     }
 }

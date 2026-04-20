@@ -8,7 +8,6 @@ import { SearchInput } from "@/components/common/SearchInput";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { ErrorBanner } from "@/components/common/ErrorBanner";
-import { SuccessBanner } from "@/components/common/SuccessBanner";
 import { toast } from "sonner";
 import { ZodError } from "zod";
 import {
@@ -59,10 +58,10 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
         const response = await getRolesAction(page, debouncedQuery);
         setData(response.data);
         setDeletingId(null);
-        toast.success(<SuccessBanner message="Role berhasil dihapus." />);
+        toast.success("Role berhasil dihapus.");
       } catch (caughtError) {
         const message = caughtError instanceof Error ? caughtError.message : "Gagal menghapus role.";
-        toast.error(<ErrorBanner message={message} />);
+        toast.error(message);
         setError("Gagal menghapus role.");
       }
     });
@@ -81,10 +80,10 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
         try {
           if (editing) {
             await updateRoleAction(editing.id, payload);
-            toast.success(<SuccessBanner message="Role berhasil disimpan." />);
+            toast.success("Role berhasil disimpan.");
           } else {
             await createRoleAction(payload);
-            toast.success(<SuccessBanner message="Role berhasil dibuat." />);
+            toast.success("Role berhasil dibuat.");
           }
 
           const response = await getRolesAction(page, debouncedQuery);
@@ -92,7 +91,7 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
           setModalOpen(false);
         } catch (caughtError) {
           const message = caughtError instanceof Error ? caughtError.message : "Gagal menyimpan role.";
-          toast.error(<ErrorBanner message={message} />);
+          toast.error(message);
           setModalOpen(false);
           setError("Gagal menyimpan role.");
         }
@@ -101,7 +100,7 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
       if (caughtError instanceof ZodError) {
         const validationMessage = caughtError.issues.map((issue) => issue.message).join(" ");
         setError(validationMessage);
-        toast.error(<ErrorBanner message={validationMessage} />);
+        toast.error(validationMessage);
         return;
       }
 

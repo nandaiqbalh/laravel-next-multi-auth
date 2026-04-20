@@ -41,4 +41,32 @@ class UpdateUserRequest extends FormRequest
             'role_id' => ['required', 'exists:roles,id'],
         ];
     }
+
+    /**
+     * Custom error messages for update user validation.
+     */
+    public function messages(): array
+    {
+        return [
+            'nik.required' => 'NIK wajib diisi.',
+            'nik.string' => 'Format NIK tidak valid.',
+            'nik.max' => 'NIK tidak boleh lebih dari :max karakter.',
+            'nik.unique' => 'NIK sudah terdaftar.',
+
+            'name.required' => 'Nama wajib diisi.',
+            'name.string' => 'Format nama tidak valid.',
+            'name.max' => 'Nama tidak boleh lebih dari :max karakter.',
+
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email tidak boleh lebih dari :max karakter.',
+            'email.unique' => 'Email sudah terdaftar.',
+
+            'password.string' => 'Format password tidak valid.',
+            'password.min' => 'Password harus minimal :min karakter.',
+
+            'role_id.required' => 'Peran wajib dipilih.',
+            'role_id.exists' => 'Peran tidak ditemukan.',
+        ];
+    }
 }

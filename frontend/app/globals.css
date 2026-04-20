@@ -94,11 +94,20 @@ select:disabled {
 }
 
 .cn-toast {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.95rem 1rem;
   background: var(--surface);
   color: var(--foreground);
   border: 1px solid color-mix(in srgb, var(--border) 88%, #ffffff 12%);
-  border-radius: var(--radius);
-  box-shadow: 0 10px 24px rgba(23, 58, 102, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  width: auto;
+  min-width: 0;
+  max-width: min(100vw - 2rem, 40rem);
 }
 
 .cn-toast[data-type="success"] {
@@ -119,6 +128,11 @@ select:disabled {
 .cn-toast[data-type="error"] {
   background: var(--destructive);
   color: var(--primary-foreground);
+}
+
+.cn-toast button {
+  color: inherit;
+  font-weight: 600;
 }
 
 .cn-toast button {

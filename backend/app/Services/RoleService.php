@@ -4,14 +4,18 @@ namespace App\Services;
 
 use App\Models\Role;
 use App\Repositories\RoleRepository;
+use App\Services\AuditLogService;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Role service encapsulates business rules for role management.
  */
 class RoleService
 {
-    public function __construct(private readonly RoleRepository $roleRepository)
-    {
+    public function __construct(
+        private readonly RoleRepository $roleRepository,
+        private readonly AuditLogService $auditLogService,
+    ) {
     }
 
     /**
@@ -37,7 +41,19 @@ class RoleService
      */
     public function create(array $payload): Role
     {
-        return $this->roleRepository->create($payload);
+        $role = $this->roleRepository->create($payload);
+
+        $this->auditLogService->log(
+            Auth::id(),
+            'role.created',
+            'role',
+            (string) $role->id,
+            [
+                'name' => $role->name,
+            ],
+        );
+
+        return $role;
     }
 
     /**
@@ -54,8 +70,19 @@ class RoleService
     public function update(int $id, array $payload): Role
     {
         $role = $this->roleRepository->findOrFail($id);
+        $updatedRole = $this->roleRepository->update($role, $payload);
 
-        return $this->roleRepository->update($role, $payload);
+        $this->auditLogService->log(
+            Auth::id(),
+            'role.updated',
+            'role',
+            (string) $updatedRole->id,
+            [
+                'name' => $updatedRole->name,
+            ],
+        );
+
+        return $updatedRole;
     }
 
     /**
@@ -65,5 +92,15 @@ class RoleService
     {
         $role = $this->roleRepository->findOrFail($id);
         $this->roleRepository->delete($role);
+
+        $this->auditLogService->log(
+            Auth::id(),
+            'role.deleted',
+            'role',
+            (string) $role->id,
+            [
+                'name' => $role->name,
+            ],
+        );
     }
 }

@@ -325,8 +325,10 @@ async function getAdminUsers(token: string, search = ""): Promise<PaginatedPaylo
  * Usage:
  * await umkmService.getAdminAuditTrail(token);
  */
-async function getAdminAuditTrail(token: string): Promise<PaginatedPayload<AuditLogItem>> {
-  const response = await authorizedGet<PaginatedPayload<AuditLogItem>>(token, "/umkm/admin/audit-trail");
+async function getAdminAuditTrail(token: string, page = 1): Promise<PaginatedPayload<AuditLogItem>> {
+  const response = await authorizedGet<PaginatedPayload<AuditLogItem>>(token, "/umkm/admin/audit-trail", {
+    page,
+  });
   return response.data;
 }
 
@@ -364,8 +366,10 @@ async function getSuperadminUsers(token: string): Promise<PaginatedPayload<UserI
  * Usage:
  * await umkmService.getSuperadminAuditTrail(token);
  */
-async function getSuperadminAuditTrail(token: string): Promise<PaginatedPayload<AuditLogItem>> {
-  const response = await authorizedGet<PaginatedPayload<AuditLogItem>>(token, "/audit-trail");
+async function getSuperadminAuditTrail(token: string, page = 1): Promise<PaginatedPayload<AuditLogItem>> {
+  const response = await authorizedGet<PaginatedPayload<AuditLogItem>>(token, "/audit-trail", {
+    page,
+  });
   return response.data;
 }
 

@@ -8,7 +8,6 @@ import { SearchInput } from "@/components/common/SearchInput";
 import { Spinner } from "@/components/ui/spinner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ErrorBanner } from "@/components/common/ErrorBanner";
-import { SuccessBanner } from "@/components/common/SuccessBanner";
 import { toast } from "sonner";
 import { ZodError } from "zod";
 import {
@@ -69,10 +68,10 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
         const response = await getUsersAction(page, debouncedQuery);
         setData(response.data);
         setDeletingId(null);
-        toast.success(<SuccessBanner message="User berhasil dihapus." />);
+        toast.success("User berhasil dihapus.");
       } catch (caughtError) {
         const message = caughtError instanceof Error ? caughtError.message : "Gagal menghapus user.";
-        toast.error(<ErrorBanner message={message} />);
+        toast.error(message);
         setError("Gagal menghapus user.");
       }
     });
@@ -136,10 +135,10 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
         try {
           if (editing) {
             await updateUserAction(editing.id, updatePayload);
-            toast.success(<SuccessBanner message="User berhasil disimpan." />);
+            toast.success("User berhasil disimpan.");
           } else {
             await createUserAction(createPayload);
-            toast.success(<SuccessBanner message="User berhasil dibuat." />);
+            toast.success("User berhasil dibuat.");
           }
 
           const response = await getUsersAction(page, debouncedQuery);
@@ -147,16 +146,14 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
           setModalOpen(false);
         } catch (caughtError) {
           const message = caughtError instanceof Error ? caughtError.message : "Gagal menyimpan user.";
-          toast.error(<ErrorBanner message={message} />);
-          setModalOpen(false);
-          setError("Gagal menyimpan user.");
+          setError(message);
         }
       });
     } catch (caughtError) {
       if (caughtError instanceof ZodError) {
         const validationMessage = caughtError.issues.map((issue) => issue.message).join(" ");
         setError(validationMessage);
-        toast.error(<ErrorBanner message={validationMessage} />);
+        toast.error(validationMessage);
         return;
       }
 
@@ -187,7 +184,6 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
           placeholder="Cari nama atau email..."
         />
 
-        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
         <div className="mt-4">
           {loading ? (
