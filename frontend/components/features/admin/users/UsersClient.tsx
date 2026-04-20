@@ -5,6 +5,9 @@ import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { Modal } from "@/components/common/Modal";
 import { Pagination } from "@/components/common/Pagination";
 import { SearchInput } from "@/components/common/SearchInput";
+import { Spinner } from "@/components/ui/spinner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
 import {
   createUserAction,
   deleteUserAction,
@@ -62,7 +65,9 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
         const response = await getUsersAction(page, debouncedQuery);
         setData(response.data);
         setDeletingId(null);
+        toast.success("User berhasil dihapus.");
       } catch {
+        toast.error("Gagal menghapus user.");
         setError("Gagal menghapus user.");
       }
     });
@@ -72,25 +77,43 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    const payload = {
+    const nikValue = String(formData.get("nik") ?? "");
+    const emailValue = String(formData.get("email") ?? "");
+    const passwordValue = String(formData.get("password") ?? "");
+
+    const payload: {
+      nik: string;
+      name: string;
+      email: string;
+      role_id: number;
+      password?: string;
+    } = {
+      nik: nikValue,
       name: String(formData.get("name") ?? ""),
-      email: String(formData.get("email") ?? ""),
-      password: String(formData.get("password") ?? ""),
+      email: emailValue,
       role_id: Number(formData.get("role_id")),
     };
+
+    if (passwordValue) {
+      payload.password = passwordValue;
+    }
 
     startTransition(async () => {
       try {
         if (editing) {
           await updateUserAction(editing.id, payload);
+          toast.success("User berhasil disimpan.");
         } else {
           await createUserAction(payload);
+          toast.success("User berhasil dibuat.");
         }
 
         const response = await getUsersAction(page, debouncedQuery);
         setData(response.data);
         setModalOpen(false);
       } catch {
+        setModalOpen(false);
+        toast.error("Gagal menyimpan user.");
         setError("Gagal menyimpan user.");
       }
     });
@@ -99,11 +122,7 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
   return (
     <section className="space-y-4">
       <div className="surface-panel p-4 md:p-6">
-        <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h2 className="page-title">Users Management</h2>
-            <p className="page-subtitle">Kelola user dengan pagination dan pencarian.</p>
-          </div>
+        <div className="mb-4 flex justify-end">
           <button
             type="button"
             onClick={openCreateModal}
@@ -114,39 +133,53 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
           </button>
         </div>
 
-        <SearchInput value={query} onChange={setQuery} placeholder="Cari nama atau email..." />
+        <SearchInput
+          value={query}
+          onChange={(value) => {
+            setQuery(value);
+            setPage(1);
+          }}
+          placeholder="Cari nama atau email..."
+        />
 
         {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-        {loading && <p className="mt-3 text-sm text-[var(--primary-dark)]">Loading data...</p>}
 
         <div className="mt-4">
-          <DataTable
-            columns={["Nama", "Email", "Role", "Aksi"]}
-            rows={data.items.map((item) => [
-              item.name,
-              item.email,
-              item.role?.name ?? "-",
-              <div key={item.id} className="flex gap-2">
-                <button
-                  type="button"
-                  className="rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
-                  onClick={() => openEditModal(item)}
-                  disabled={loading}
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  className="rounded-lg bg-red-600 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
-                  onClick={() => setDeletingId(item.id)}
-                  disabled={loading}
-                >
-                  Delete
-                </button>
-              </div>,
-            ])}
-            emptyLabel="Belum ada data user"
-          />
+          {loading ? (
+            <div className="flex min-h-[180px] items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-600">
+              <Spinner className="mr-2 h-5 w-5 text-slate-600" />
+              Memuat user...
+            </div>
+          ) : (
+            <DataTable
+              columns={["NIK", "Nama", "Email", "Role", "Aksi"]}
+              rows={data.items.map((item) => [
+                item.nik,
+                item.name,
+                item.email,
+                item.role?.name ?? "-",
+                <div key={item.id} className="flex gap-2">
+                  <button
+                    type="button"
+                    className="rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
+                    onClick={() => openEditModal(item)}
+                    disabled={loading}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-lg bg-red-600 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
+                    onClick={() => setDeletingId(item.id)}
+                    disabled={loading}
+                  >
+                    Delete
+                  </button>
+                </div>,
+              ])}
+              emptyLabel="Belum ada data user"
+            />
+          )}
         </div>
 
         <Pagination currentPage={data.meta.current_page} lastPage={data.meta.last_page} onChange={setPage} />
@@ -159,38 +192,29 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
         title={editing ? "Edit User" : "Tambah User"}
       >
         <form onSubmit={onSubmit} className="space-y-3">
-          <input name="name" defaultValue={editing?.name ?? ""} className="field" placeholder="Nama" required disabled={loading} />
-          <input
-            name="email"
-            type="email"
-            defaultValue={editing?.email ?? ""}
-            className="field"
-            placeholder="Email"
-            required
-            disabled={loading}
-          />
-          <input
-            name="password"
-            type="password"
-            className="field"
-            placeholder={editing ? "Password baru (opsional)" : "Password"}
-            required={!editing}
-            disabled={loading}
-          />
-          <select
-            name="role_id"
-            className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2.5 text-sm text-[var(--foreground)] outline-none focus:ring-2 focus:ring-[#b3dcfb]"
-            defaultValue={editing?.role_id ?? roles[0]?.id}
-            required
-            disabled={loading}
-          >
-            {roles.map((role) => (
-              <option key={role.id} value={role.id}>
-                {role.name}
-              </option>
-            ))}
-          </select>
-
+            <input name="nik" defaultValue={editing?.nik ?? ""} className="field" placeholder="NIK" required disabled={loading} />
+            <input name="name" defaultValue={editing?.name ?? ""} className="field" placeholder="Nama" required disabled={loading} />
+            <input name="email" defaultValue={editing?.email ?? ""} className="field" placeholder="Email" type="email" required disabled={loading} />
+            <input
+              name="password"
+              type="password"
+              className="field"
+              placeholder={editing ? "Password baru (opsional)" : "Password"}
+              required={!editing}
+              disabled={loading}
+            />
+            <Select name="role_id" defaultValue={String(editing?.role_id ?? roles[0]?.id)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Pilih role" />
+              </SelectTrigger>
+              <SelectContent>
+                {roles.map((role) => (
+                  <SelectItem key={role.id} value={String(role.id)}>
+                    {role.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           <button className="btn-primary w-full rounded-lg px-4 py-2 font-semibold" type="submit" disabled={loading}>
             {loading ? "Menyimpan..." : "Simpan"}
           </button>

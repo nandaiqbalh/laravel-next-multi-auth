@@ -5,6 +5,9 @@ import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { Modal } from "@/components/common/Modal";
 import { Pagination } from "@/components/common/Pagination";
 import { SearchInput } from "@/components/common/SearchInput";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 import {
   createRoleAction,
   deleteRoleAction,
@@ -67,14 +70,18 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
       try {
         if (editing) {
           await updateRoleAction(editing.id, payload);
+          toast.success("Role berhasil disimpan.");
         } else {
           await createRoleAction(payload);
+          toast.success("Role berhasil dibuat.");
         }
 
         const response = await getRolesAction(page, debouncedQuery);
         setData(response.data);
         setModalOpen(false);
       } catch {
+        setModalOpen(false);
+        toast.error("Gagal menyimpan role.");
         setError("Gagal menyimpan role.");
       }
     });
@@ -82,59 +89,67 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
 
   return (
     <section className="surface-panel p-4 md:p-6">
-      <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h2 className="page-title">Roles Management</h2>
-          <p className="page-subtitle">Kelola role dengan pagination dan pencarian.</p>
+      <section className="space-y-4">
+        <div className="flex justify-end">
+          <Button
+            type="button"
+            onClick={() => {
+              setEditing(null);
+              setModalOpen(true);
+            }}
+            disabled={loading}
+          >
+            Tambah Role
+          </Button>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            setEditing(null);
-            setModalOpen(true);
+        <SearchInput
+          value={query}
+          onChange={(value) => {
+            setQuery(value);
+            setPage(1);
           }}
-          disabled={loading}
-          className="btn-primary rounded-lg px-4 py-2 text-sm font-semibold"
-        >
-          Tambah Role
-        </button>
-      </div>
-
-      <SearchInput value={query} onChange={setQuery} placeholder="Cari role..." />
-
-      {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
-      {loading && <p className="mt-3 text-sm text-[var(--primary-dark)]">Loading data...</p>}
-
-      <div className="mt-4">
-        <DataTable
-          columns={["Nama", "Aksi"]}
-          rows={data.items.map((item) => [
-            item.name,
-            <div key={item.id} className="flex gap-2">
-              <button
-                type="button"
-                className="rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
-                onClick={() => {
-                  setEditing(item);
-                  setModalOpen(true);
-                }}
-                disabled={loading}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                className="rounded-lg bg-red-600 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
-                onClick={() => setDeletingId(item.id)}
-                disabled={loading}
-              >
-                Delete
-              </button>
-            </div>,
-          ])}
-          emptyLabel="Belum ada data role"
+          placeholder="Cari role..."
         />
-      </div>
+
+        <div className="mt-4">
+          {loading ? (
+            <div className="flex min-h-[180px] items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-600">
+              <Spinner className="mr-2 h-5 w-5 text-slate-600" />
+              Memuat role...
+            </div>
+          ) : (
+            <DataTable
+              columns={["Nama", "Aksi"]}
+              rows={data.items.map((item) => [
+                item.name,
+                <div key={item.id} className="flex gap-2">
+                  <button
+                    type="button"
+                    className="rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
+                    onClick={() => {
+                      setEditing(item);
+                      setModalOpen(true);
+                    }}
+                    disabled={loading}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-lg bg-red-600 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
+                    onClick={() => setDeletingId(item.id)}
+                    disabled={loading}
+                  >
+                    Delete
+                  </button>
+                </div>,
+              ])}
+              emptyLabel="Belum ada data role"
+            />
+          )}
+        </div>
+
+      </section>
 
       <Pagination currentPage={data.meta.current_page} lastPage={data.meta.last_page} onChange={setPage} />
 

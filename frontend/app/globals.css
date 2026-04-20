@@ -89,6 +89,38 @@ select:disabled {
   box-shadow: 0 8px 20px rgba(18, 54, 94, 0.06);
 }
 
+.cn-toast {
+  background: var(--surface);
+  color: var(--foreground);
+  border: 1px solid color-mix(in srgb, var(--border) 88%, #ffffff 12%);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 24px rgba(23, 58, 102, 0.08);
+}
+
+.cn-toast[data-type="success"] {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+.cn-toast[data-type="info"] {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+}
+
+.cn-toast[data-type="warning"] {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.cn-toast[data-type="error"] {
+  background: var(--destructive);
+  color: var(--primary-foreground);
+}
+
+.cn-toast button {
+  color: inherit;
+}
+
 .btn-primary {
   background: var(--primary);
   color: var(--primary-foreground);

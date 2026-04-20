@@ -1,5 +1,9 @@
 "use client";
 
+import type { ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
 /**
  * Generic confirmation dialog for destructive or important actions.
  */
@@ -12,6 +16,7 @@ export function ConfirmDialog({
   loading = false,
   onConfirm,
   onCancel,
+  actions,
 }: {
   open: boolean;
   title: string;
@@ -21,39 +26,29 @@ export function ConfirmDialog({
   loading?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  actions?: ReactNode;
 }) {
-  if (!open) {
-    return null;
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-4 backdrop-blur-sm" onClick={onCancel}>
-      <div
-        className="w-full max-w-md rounded-xl border border-[var(--border)] bg-white p-5 shadow-[0_16px_36px_rgba(20,40,70,0.18)]"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <h3 className="text-lg font-semibold text-[var(--foreground)]">{title}</h3>
-        <p className="mt-2 text-sm text-[var(--muted)]">{description}</p>
+    <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onCancel()}>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
 
-        <div className="mt-6 flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={loading}
-            className="rounded-xl border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface-soft)]"
-          >
-            {cancelLabel}
-          </button>
-          <button
-            type="button"
-            onClick={onConfirm}
-            disabled={loading}
-            className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
-          >
-            {loading ? "Memproses..." : confirmLabel}
-          </button>
-        </div>
-      </div>
-    </div>
+        {actions ? (
+          <div className="mt-6">{actions}</div>
+        ) : (
+          <DialogFooter className="mt-4 gap-2">
+            <Button variant="outline" onClick={onCancel} disabled={loading}>
+              {cancelLabel}
+            </Button>
+            <Button onClick={onConfirm} disabled={loading}>
+              {loading ? "Memproses..." : confirmLabel}
+            </Button>
+          </DialogFooter>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }

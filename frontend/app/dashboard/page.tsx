@@ -1,4 +1,5 @@
 import { ClaimUmkmForm } from "@/features/umkm/forms/ClaimUmkmForm";
+import { PageHeader } from "@/components/ui/page-header";
 import { PortalShell } from "@/features/umkm/components/PortalShell";
 import { StatCard } from "@/features/umkm/components/StatCard";
 import { umkmService } from "@/features/umkm/services/umkmService";
@@ -19,10 +20,10 @@ export default async function DashboardEntryPage() {
   return (
     <PortalShell role="UMKM_USER" userName={context.user.name} userEmail={context.user.email}>
       <div className="space-y-6">
-        <section>
-          <h1 className="page-title">Dashboard UMKM User</h1>
-          <p className="page-subtitle">Ringkasan status profil, claim, dan pengajuan layanan Anda.</p>
-        </section>
+        <PageHeader
+          title="Dashboard UMKM User"
+          description="Ringkasan status profil, claim, dan pengajuan layanan Anda."
+        />
 
         <section className="grid gap-4 md:grid-cols-3">
           <StatCard title="Status Profil" value={profile ? (profile.is_verified ? "Terverifikasi" : "Belum Verifikasi") : "Belum Isi Profil"} />

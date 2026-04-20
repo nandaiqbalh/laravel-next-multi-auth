@@ -1,4 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { PortalShell } from "@/features/umkm/components/PortalShell";
 import { SubmissionTable } from "@/features/umkm/components/SubmissionTable";
 import { SubmissionForm } from "@/features/umkm/forms/SubmissionForm";
@@ -19,12 +20,10 @@ export default async function PengajuanPage() {
   return (
     <PortalShell role="UMKM_USER" userName={context.user.name} userEmail={context.user.email}>
       <div className="space-y-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Pengajuan Layanan</CardTitle>
-            <CardDescription>Ajukan layanan dengan melampirkan URL dokumen Google Drive.</CardDescription>
-          </CardHeader>
-        </Card>
+        <PageHeader
+          title="Pengajuan Layanan"
+          description="Ajukan layanan dengan melampirkan URL dokumen Google Drive."
+        />
 
         <SubmissionForm services={services} />
 

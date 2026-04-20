@@ -16,7 +16,7 @@ class RoleRepository
     public function paginate(int $perPage = 20, ?string $search = null): LengthAwarePaginator
     {
         return Role::query()
-            ->when($search, fn ($query) => $query->where('name', 'like', "%{$search}%"))
+            ->when($search, fn ($query) => $query->whereRaw('LOWER(name) LIKE ?', ["%" . strtolower($search) . "%"]))
             ->orderByDesc('id')
             ->paginate($perPage)
             ->withQueryString();

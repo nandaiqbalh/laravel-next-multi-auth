@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CaretDown, SignOut } from "@phosphor-icons/react";
 import { type ComponentType, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 
 export type SidebarIcon = ComponentType<{ className?: string }>;
 
@@ -60,6 +61,7 @@ export function Sidebar({
   }, [items, pathname]);
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>(initialExpanded);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   function toggle(label: string) {
     setExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -155,13 +157,27 @@ export function Sidebar({
         </div>
         <button
           type="button"
-          onClick={onLogout}
+          onClick={() => setConfirmOpen(true)}
           disabled={logoutLoading}
           className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-100 disabled:opacity-50"
         >
           <SignOut className="size-4" />
           {logoutLoading ? "Memproses..." : "Logout"}
         </button>
+
+        <ConfirmDialog
+          open={confirmOpen}
+          title="Konfirmasi Logout"
+          description="Apakah Anda yakin ingin keluar dari portal? Anda akan diminta login kembali untuk mengakses dashboard."
+          cancelLabel="Batal"
+          confirmLabel="Konfirmasi Logout"
+          loading={logoutLoading}
+          onCancel={() => setConfirmOpen(false)}
+          onConfirm={() => {
+            setConfirmOpen(false);
+            onLogout();
+          }}
+        />
       </div>
     </aside>
   );

@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/ui/page-header";
 import { UsersClient } from "@/components/features/admin/users/UsersClient";
 import { getRolesAction } from "@/lib/actions/roleActions";
 import { getUsersAction } from "@/lib/actions/userActions";
@@ -8,5 +9,13 @@ import { getUsersAction } from "@/lib/actions/userActions";
 export default async function AdminUsersPage() {
   const [usersResponse, rolesResponse] = await Promise.all([getUsersAction(1, ""), getRolesAction(1, "")]);
 
-  return <UsersClient initialData={usersResponse.data} roles={rolesResponse.data.items} />;
+  return (
+    <div className="space-y-4">
+      <PageHeader
+        title="Users Management"
+        description="Kelola user, peran, dan akses dalam portal layanan digital."
+      />
+      <UsersClient initialData={usersResponse.data} roles={rolesResponse.data.items} />
+    </div>
+  );
 }

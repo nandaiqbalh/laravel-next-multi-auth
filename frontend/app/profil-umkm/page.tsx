@@ -1,4 +1,4 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { PortalShell } from "@/features/umkm/components/PortalShell";
 import { UmkmProfileForm } from "@/features/umkm/forms/UmkmProfileForm";
 import { umkmService } from "@/features/umkm/services/umkmService";
@@ -14,12 +14,10 @@ export default async function ProfilUmkmPage() {
   return (
     <PortalShell role="UMKM_USER" userName={context.user.name} userEmail={context.user.email}>
       <div className="space-y-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Profil UMKM</CardTitle>
-            <CardDescription>Lengkapi seluruh data profil UMKM sesuai format final database.</CardDescription>
-          </CardHeader>
-        </Card>
+        <PageHeader
+          title="Profil UMKM"
+          description="Lengkapi seluruh data profil UMKM untuk mengakses fitur pengajuan layanan digital."
+        />
         <UmkmProfileForm initialProfile={profile} />
       </div>
     </PortalShell>

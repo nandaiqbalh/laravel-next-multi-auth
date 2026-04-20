@@ -20,6 +20,7 @@ export async function getUsersAction(page = 1, search = "") {
  * Create user using admin bearer token from session.
  */
 export async function createUserAction(payload: {
+  nik: string;
   name: string;
   email: string;
   password: string;
@@ -39,7 +40,7 @@ export async function createUserAction(payload: {
  */
 export async function updateUserAction(
   id: string,
-  payload: { name: string; email: string; password?: string; role_id: number },
+  payload: { nik: string; name: string; email: string; password?: string; role_id: number },
 ) {
   const session = await auth();
 
