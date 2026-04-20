@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { PortalShell } from "@/features/umkm/components/PortalShell";
 import { SubmissionTable } from "@/features/umkm/components/SubmissionTable";
@@ -6,10 +6,16 @@ import { SubmissionForm } from "@/features/umkm/forms/SubmissionForm";
 import { umkmService } from "@/features/umkm/services/umkmService";
 import { requireRole } from "@/features/umkm/utils/guards";
 
+export const metadata = {
+  title: 'Pengajuan Layanan UMKM',
+  description: 'Ajukan layanan digital dan lihat riwayat pengajuan UMKM.',
+};
+
+
 /**
  * Pengajuan page for UMKM_USER role.
  */
-export default async function PengajuanPage() {
+export default async function UserUmkmPengajuanPage() {
   const context = await requireRole(["UMKM_USER"]);
 
   const [services, submissions] = await Promise.all([

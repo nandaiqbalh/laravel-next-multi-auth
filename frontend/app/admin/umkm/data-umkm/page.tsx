@@ -5,6 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { umkmService } from "@/features/umkm/services/umkmService";
 
+export const metadata = {
+  title: 'Data UMKM',
+  description: 'Lihat dan kelola data UMKM yang terdaftar.',
+};
+
+
 /**
  * Admin UMKM data listing page.
  */

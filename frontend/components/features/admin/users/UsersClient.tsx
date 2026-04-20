@@ -7,13 +7,17 @@ import { Pagination } from "@/components/common/Pagination";
 import { SearchInput } from "@/components/common/SearchInput";
 import { Spinner } from "@/components/ui/spinner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ErrorBanner } from "@/components/common/ErrorBanner";
+import { SuccessBanner } from "@/components/common/SuccessBanner";
 import { toast } from "sonner";
+import { ZodError } from "zod";
 import {
   createUserAction,
   deleteUserAction,
   getUsersAction,
   updateUserAction,
 } from "@/lib/actions/userActions";
+import { createUserSchema, editUserSchema } from "@/validations/user.schema.validation";
 import { useDebounce } from "@/lib/services/useDebounce";
 import { PaginatedData, Role, User } from "@/lib/types";
 import { FormEvent, useEffect, useState, useTransition } from "react";
@@ -65,9 +69,10 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
         const response = await getUsersAction(page, debouncedQuery);
         setData(response.data);
         setDeletingId(null);
-        toast.success("User berhasil dihapus.");
-      } catch {
-        toast.error("Gagal menghapus user.");
+        toast.success(<SuccessBanner message="User berhasil dihapus." />);
+      } catch (caughtError) {
+        const message = caughtError instanceof Error ? caughtError.message : "Gagal menghapus user.";
+        toast.error(<ErrorBanner message={message} />);
         setError("Gagal menghapus user.");
       }
     });
@@ -77,46 +82,86 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
-    const nikValue = String(formData.get("nik") ?? "");
-    const emailValue = String(formData.get("email") ?? "");
-    const passwordValue = String(formData.get("password") ?? "");
-
-    const payload: {
-      nik: string;
-      name: string;
-      email: string;
-      role_id: number;
-      password?: string;
-    } = {
-      nik: nikValue,
+    const values = {
+      nik: String(formData.get("nik") ?? ""),
       name: String(formData.get("name") ?? ""),
-      email: emailValue,
-      role_id: Number(formData.get("role_id")),
+      email: String(formData.get("email") ?? ""),
+      password: String(formData.get("password") ?? "") || undefined,
+      role_id: String(formData.get("role_id") ?? ""),
     };
 
-    if (passwordValue) {
-      payload.password = passwordValue;
-    }
+    try {
+      const validated = editing ? editUserSchema.parse(values) : createUserSchema.parse(values);
+      const payload: {
+        nik: string;
+        name: string;
+        email: string;
+        role_id: number;
+        password?: string;
+      } = {
+        nik: validated.nik,
+        name: validated.name,
+        email: validated.email,
+        role_id: Number(validated.role_id),
+      };
 
-    startTransition(async () => {
-      try {
-        if (editing) {
-          await updateUserAction(editing.id, payload);
-          toast.success("User berhasil disimpan.");
-        } else {
-          await createUserAction(payload);
-          toast.success("User berhasil dibuat.");
-        }
+      const createPayload = {
+        nik: validated.nik,
+        name: validated.name,
+        email: validated.email,
+        role_id: Number(validated.role_id),
+        password: validated.password ?? "",
+      };
 
-        const response = await getUsersAction(page, debouncedQuery);
-        setData(response.data);
-        setModalOpen(false);
-      } catch {
-        setModalOpen(false);
-        toast.error("Gagal menyimpan user.");
-        setError("Gagal menyimpan user.");
+      const updatePayload: {
+        nik: string;
+        name: string;
+        email: string;
+        role_id: number;
+        password?: string;
+      } = {
+        nik: validated.nik,
+        name: validated.name,
+        email: validated.email,
+        role_id: Number(validated.role_id),
+      };
+
+      if (validated.password) {
+        updatePayload.password = validated.password;
       }
-    });
+
+      setError("");
+
+      startTransition(async () => {
+        try {
+          if (editing) {
+            await updateUserAction(editing.id, updatePayload);
+            toast.success(<SuccessBanner message="User berhasil disimpan." />);
+          } else {
+            await createUserAction(createPayload);
+            toast.success(<SuccessBanner message="User berhasil dibuat." />);
+          }
+
+          const response = await getUsersAction(page, debouncedQuery);
+          setData(response.data);
+          setModalOpen(false);
+        } catch (caughtError) {
+          const message = caughtError instanceof Error ? caughtError.message : "Gagal menyimpan user.";
+          toast.error(<ErrorBanner message={message} />);
+          setModalOpen(false);
+          setError("Gagal menyimpan user.");
+        }
+      });
+    } catch (caughtError) {
+      if (caughtError instanceof ZodError) {
+        const validationMessage = caughtError.issues.map((issue) => issue.message).join(" ");
+        setError(validationMessage);
+        toast.error(<ErrorBanner message={validationMessage} />);
+        return;
+      }
+
+      throw caughtError;
+    }
   }
 
   return (
@@ -215,6 +260,7 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
                 ))}
               </SelectContent>
             </Select>
+            {error && <ErrorBanner message={error} />}
           <button className="btn-primary w-full rounded-lg px-4 py-2 font-semibold" type="submit" disabled={loading}>
             {loading ? "Menyimpan..." : "Simpan"}
           </button>

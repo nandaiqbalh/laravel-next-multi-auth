@@ -41,9 +41,9 @@ export function PortalShell({
 }) {
   const menuByRole: Record<RoleName, SidebarNavItem[]> = {
     UMKM_USER: [
-      { href: "/dashboard", label: "Dashboard", icon: ChartLine },
-      { href: "/profil-umkm", label: "Profil UMKM", icon: Buildings },
-      { href: "/pengajuan", label: "Pengajuan", icon: ClipboardText },
+      { href: "/user-umkm/dashboard", label: "Dashboard", icon: ChartLine },
+      { href: "/user-umkm/profil-umkm", label: "Profil UMKM", icon: Buildings },
+      { href: "/user-umkm/pengajuan", label: "Pengajuan", icon: ClipboardText },
     ],
     UMKM_ADMIN: [
       { href: "/admin/umkm/dashboard", label: "Dashboard", icon: ChartLine },

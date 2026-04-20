@@ -5,10 +5,16 @@ import { StatCard } from "@/features/umkm/components/StatCard";
 import { umkmService } from "@/features/umkm/services/umkmService";
 import { requireRole } from "@/features/umkm/utils/guards";
 
+export const metadata = {
+  title: 'Dashboard UMKM User',
+  description: 'Ringkasan status profil, pengajuan, dan klaim untuk UMKM user.',
+};
+
+
 /**
  * Dashboard page for UMKM_USER role.
  */
-export default async function DashboardEntryPage() {
+export default async function UserUmkmDashboardPage() {
   const context = await requireRole(["UMKM_USER"]);
 
   const [profile, claim, submissions] = await Promise.all([
@@ -26,7 +32,10 @@ export default async function DashboardEntryPage() {
         />
 
         <section className="grid gap-4 md:grid-cols-3">
-          <StatCard title="Status Profil" value={profile ? (profile.is_verified ? "Terverifikasi" : "Belum Verifikasi") : "Belum Isi Profil"} />
+          <StatCard
+            title="Status Profil"
+            value={profile ? (profile.is_verified ? "Terverifikasi" : "Belum Verifikasi") : "Belum Isi Profil"}
+          />
           <StatCard title="Status Claim" value={claim?.status ?? "Belum Ajukan"} />
           <StatCard title="Total Pengajuan" value={submissions.meta.total} />
         </section>

@@ -7,6 +7,12 @@ import { AdminClaimActions } from "@/features/umkm/components/AdminClaimActions"
 import { AdminSubmissionActions } from "@/features/umkm/components/AdminSubmissionActions";
 import { umkmService } from "@/features/umkm/services/umkmService";
 
+export const metadata = {
+  title: 'Validasi Pengajuan UMKM',
+  description: 'Kelola dan validasi pengajuan layanan UMKM.',
+};
+
+
 /**
  * Admin UMKM queue page to process claim and service submission.
  */

@@ -28,7 +28,7 @@ export async function requireRole(allowed: RoleName[]) {
       redirect("/admin/umkm/dashboard");
     }
 
-    redirect("/dashboard");
+    redirect("/user-umkm/dashboard");
   }
 
   return {

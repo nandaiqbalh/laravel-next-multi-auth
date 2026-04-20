@@ -3,6 +3,12 @@ import { UsersClient } from "@/components/features/admin/users/UsersClient";
 import { getRolesAction } from "@/lib/actions/roleActions";
 import { getUsersAction } from "@/lib/actions/userActions";
 
+export const metadata = {
+  title: 'Manajemen Users Superadmin',
+  description: 'Kelola pengguna pada level superadmin.',
+};
+
+
 /**
  * Superadmin users page with full CRUD operations.
  */

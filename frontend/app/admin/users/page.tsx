@@ -3,6 +3,12 @@ import { UsersClient } from "@/components/features/admin/users/UsersClient";
 import { getRolesAction } from "@/lib/actions/roleActions";
 import { getUsersAction } from "@/lib/actions/userActions";
 
+export const metadata = {
+  title: 'Manajemen Users',
+  description: 'Kelola pengguna sistem dengan hak akses yang sesuai.',
+};
+
+
 /**
  * Admin users page loads initial users and roles data on server.
  */

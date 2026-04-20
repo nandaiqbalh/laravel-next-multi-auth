@@ -18,7 +18,7 @@ export default async function SuperadminLayout({ children }: { children: ReactNo
       redirect("/admin/umkm/dashboard");
     }
 
-    redirect("/dashboard");
+    redirect("/user-umkm/dashboard");
   }
 
   return (

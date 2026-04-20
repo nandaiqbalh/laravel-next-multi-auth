@@ -1,6 +1,12 @@
 import { auth } from "@/auth";
 import Link from "next/link";
 
+export const metadata = {
+  title: '',
+  description: 'Halaman page.tsx.',
+};
+
+
 /**
  * Home page renders product landing and does not auto-redirect.
  */
@@ -11,14 +17,14 @@ export default async function HomePage() {
       ? "/superadmin/dashboard"
       : session?.user.role === "UMKM_ADMIN"
         ? "/admin/umkm/dashboard"
-        : "/dashboard";
+        : "/user-umkm/dashboard";
 
   return (
     <main className="min-h-screen">
       <header className="sticky top-0 z-30 border-b border-gray-100 bg-white/95 backdrop-blur-sm">
         <div className="flex h-14 w-full items-center justify-between px-4 sm:px-8 lg:px-10">
           <div>
-            <p className="text-base font-bold text-sky-800">Fullstack Starter</p>
+            <p className="text-base font-bold text-sky-800">Portal UMKM Digital</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -52,16 +58,15 @@ export default async function HomePage() {
 
         <div className="relative w-full px-2 text-center sm:px-6">
           <p className="inline-block rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em]">
-            Laravel API + Next.js Frontend
+            Layanan Digital untuk UMKM
           </p>
           <h1 className="mt-5 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
-            Multi-Auth Starter
+            Portal UMKM Digital
             <br />
-            Siap Pakai untuk Project Produksi
+            untuk Pengajuan dan Verifikasi Usaha
           </h1>
           <p className="mt-5 text-base text-sky-100 sm:text-lg">
-            Template fullstack modern dengan auth role-based, dashboard admin/user, CRUD management,
-            dan integrasi Laravel + NextAuth.
+            Akses profil usaha, ajukan layanan digital, dan pantau status permohonan UMKM dalam satu portal.
           </p>
 
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
@@ -81,12 +86,12 @@ export default async function HomePage() {
 
           <div className="mt-10 grid grid-cols-1 gap-3 text-left sm:grid-cols-3">
             <div className="rounded-xl border border-white/20 bg-white/10 p-4">
-              <p className="text-sm font-semibold">Multi Role Ready</p>
-              <p className="mt-1 text-xs text-sky-100">Admin dan user dengan akses terpisah.</p>
+              <p className="text-sm font-semibold">Profil UMKM</p>
+              <p className="mt-1 text-xs text-sky-100">Lengkapi data usaha untuk dapat mengajukan layanan.</p>
             </div>
             <div className="rounded-xl border border-white/20 bg-white/10 p-4">
-              <p className="text-sm font-semibold">CRUD Foundation</p>
-              <p className="mt-1 text-xs text-sky-100">Users, roles, modal form, search, dan pagination.</p>
+              <p className="text-sm font-semibold">Ajukan Layanan</p>
+              <p className="mt-1 text-xs text-sky-100">Kirim permohonan digital dan pantau prosesnya.</p>
             </div>
             <div className="rounded-xl border border-white/20 bg-white/10 p-4">
               <p className="text-sm font-semibold">API Production Pattern</p>

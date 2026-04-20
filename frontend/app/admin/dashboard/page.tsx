@@ -1,5 +1,11 @@
 import { auth } from "@/auth";
 
+export const metadata = {
+  title: 'Dashboard Admin',
+  description: 'Ringkasan dashboard untuk admin aplikasi.',
+};
+
+
 /**
  * Admin dashboard page displays role-specific quick summary.
  */

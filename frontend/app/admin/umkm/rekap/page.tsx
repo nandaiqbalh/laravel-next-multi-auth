@@ -4,6 +4,12 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { StatCard } from "@/features/umkm/components/StatCard";
 import { umkmService } from "@/features/umkm/services/umkmService";
 
+export const metadata = {
+  title: 'Rekap Pengajuan UMKM',
+  description: 'Lihat rekapitulasi status pengajuan UMKM.',
+};
+
+
 /**
  * Rekap page for UMKM admin.
  */

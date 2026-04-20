@@ -4,10 +4,16 @@ import { UmkmProfileForm } from "@/features/umkm/forms/UmkmProfileForm";
 import { umkmService } from "@/features/umkm/services/umkmService";
 import { requireRole } from "@/features/umkm/utils/guards";
 
+export const metadata = {
+  title: 'Profil UMKM',
+  description: 'Kelola data profil UMKM untuk pengajuan layanan digital.',
+};
+
+
 /**
  * Profil UMKM page for UMKM_USER role.
  */
-export default async function ProfilUmkmPage() {
+export default async function UserUmkmProfilePage() {
   const context = await requireRole(["UMKM_USER"]);
   const profile = await umkmService.getMyProfile(context.token);
 

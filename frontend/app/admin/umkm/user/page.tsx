@@ -4,6 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { umkmService } from "@/features/umkm/services/umkmService";
 
+export const metadata = {
+  title: 'Users UMKM',
+  description: 'Kelola akun pengguna UMKM dalam portal.',
+};
+
+
 /**
  * UMKM admin user listing page.
  */

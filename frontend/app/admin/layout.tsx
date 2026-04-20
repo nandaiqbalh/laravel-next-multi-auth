@@ -15,7 +15,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   }
 
   if (session.user.role !== "UMKM_ADMIN" && session.user.role !== "SUPERADMIN") {
-    redirect("/dashboard");
+    redirect("/user-umkm/dashboard");
   }
 
   return (

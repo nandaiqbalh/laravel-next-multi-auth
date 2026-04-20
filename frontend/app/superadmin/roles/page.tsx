@@ -2,6 +2,12 @@ import { PageHeader } from "@/components/ui/page-header";
 import { RolesClient } from "@/components/features/admin/roles/RolesClient";
 import { getRolesAction } from "@/lib/actions/roleActions";
 
+export const metadata = {
+  title: 'Manajemen Roles Superadmin',
+  description: 'Kelola peran pada level superadmin.',
+};
+
+
 /**
  * Superadmin roles page with full CRUD operations.
  */

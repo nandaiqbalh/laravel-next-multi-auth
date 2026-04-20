@@ -7,13 +7,17 @@ import { Pagination } from "@/components/common/Pagination";
 import { SearchInput } from "@/components/common/SearchInput";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { ErrorBanner } from "@/components/common/ErrorBanner";
+import { SuccessBanner } from "@/components/common/SuccessBanner";
 import { toast } from "sonner";
+import { ZodError } from "zod";
 import {
   createRoleAction,
   deleteRoleAction,
   getRolesAction,
   updateRoleAction,
 } from "@/lib/actions/roleActions";
+import { roleSchema } from "@/validations/role.schema.validation";
 import { useDebounce } from "@/lib/services/useDebounce";
 import { PaginatedData, Role } from "@/lib/types";
 import { FormEvent, useEffect, useState, useTransition } from "react";
@@ -55,7 +59,10 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
         const response = await getRolesAction(page, debouncedQuery);
         setData(response.data);
         setDeletingId(null);
-      } catch {
+        toast.success(<SuccessBanner message="Role berhasil dihapus." />);
+      } catch (caughtError) {
+        const message = caughtError instanceof Error ? caughtError.message : "Gagal menghapus role.";
+        toast.error(<ErrorBanner message={message} />);
         setError("Gagal menghapus role.");
       }
     });
@@ -64,27 +71,42 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const payload = { name: String(formData.get("name") ?? "") };
+    const values = { name: String(formData.get("name") ?? "") };
 
-    startTransition(async () => {
-      try {
-        if (editing) {
-          await updateRoleAction(editing.id, payload);
-          toast.success("Role berhasil disimpan.");
-        } else {
-          await createRoleAction(payload);
-          toast.success("Role berhasil dibuat.");
+    try {
+      const payload = roleSchema.parse(values);
+      setError("");
+
+      startTransition(async () => {
+        try {
+          if (editing) {
+            await updateRoleAction(editing.id, payload);
+            toast.success(<SuccessBanner message="Role berhasil disimpan." />);
+          } else {
+            await createRoleAction(payload);
+            toast.success(<SuccessBanner message="Role berhasil dibuat." />);
+          }
+
+          const response = await getRolesAction(page, debouncedQuery);
+          setData(response.data);
+          setModalOpen(false);
+        } catch (caughtError) {
+          const message = caughtError instanceof Error ? caughtError.message : "Gagal menyimpan role.";
+          toast.error(<ErrorBanner message={message} />);
+          setModalOpen(false);
+          setError("Gagal menyimpan role.");
         }
-
-        const response = await getRolesAction(page, debouncedQuery);
-        setData(response.data);
-        setModalOpen(false);
-      } catch {
-        setModalOpen(false);
-        toast.error("Gagal menyimpan role.");
-        setError("Gagal menyimpan role.");
+      });
+    } catch (caughtError) {
+      if (caughtError instanceof ZodError) {
+        const validationMessage = caughtError.issues.map((issue) => issue.message).join(" ");
+        setError(validationMessage);
+        toast.error(<ErrorBanner message={validationMessage} />);
+        return;
       }
-    });
+
+      throw caughtError;
+    }
   }
 
   return (
@@ -168,6 +190,7 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
             required
             disabled={loading}
           />
+          {error && <ErrorBanner message={error} />}
           <button className="btn-primary w-full rounded-lg px-4 py-2 font-semibold" type="submit" disabled={loading}>
             {loading ? "Menyimpan..." : "Simpan"}
           </button>

@@ -3,6 +3,12 @@ import { redirect } from "next/navigation";
 import { StatCard } from "@/features/umkm/components/StatCard";
 import { umkmService } from "@/features/umkm/services/umkmService";
 
+export const metadata = {
+  title: 'Dashboard Admin UMKM',
+  description: 'Ringkasan validasi profil, klaim, dan pengajuan UMKM.',
+};
+
+
 /**
  * Admin UMKM dashboard page.
  */
