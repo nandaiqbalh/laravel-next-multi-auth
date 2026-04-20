@@ -14,7 +14,17 @@ export default async function AdminUmkmDashboardPage() {
     redirect("/login");
   }
 
-  const summary = await umkmService.getAdminDashboard(session.token);
+  let summary;
+
+  try {
+    summary = await umkmService.getAdminDashboard(session.token);
+  } catch (error) {
+    if (error instanceof Error && error.message.toLowerCase().includes("unauthenticated")) {
+      redirect("/login");
+    }
+
+    throw error;
+  }
 
   return (
     <div className="space-y-4">
