@@ -4,11 +4,17 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Table primitives for tabular data display.
+ *
+ * Usage:
+ * <Table><TableHeader>...</TableHeader><TableBody>...</TableBody></Table>
+ */
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto rounded-xl border border-border/80 bg-white"
+      className="relative w-full overflow-x-auto"
     >
       <table
         data-slot="table"
@@ -23,7 +29,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("bg-[var(--surface-soft)] [&_tr]:border-b [&_tr]:border-border/80", className)}
+      className={cn("bg-[var(--surface-soft)] [&_tr]:border-b", className)}
       {...props}
     />
   )
@@ -57,7 +63,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b border-border/70 transition-colors hover:bg-muted/70 has-aria-expanded:bg-muted/70 data-[state=selected]:bg-muted",
+        "border-b border-[color-mix(in_srgb,var(--border)_90%,white_10%)] transition-colors hover:bg-[var(--surface-soft)] has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
         className
       )}
       {...props}
@@ -70,7 +76,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-11 px-4 text-left align-middle text-xs font-semibold tracking-wide whitespace-nowrap text-slate-600 uppercase [&:has([role=checkbox])]:pr-0",
+        "h-10 px-3 text-left align-middle text-xs font-semibold whitespace-nowrap uppercase tracking-[0.06em] text-slate-600 [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}
@@ -83,7 +89,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "px-4 py-3 align-middle whitespace-nowrap text-sm [&:has([role=checkbox])]:pr-0",
+        "p-3 align-middle whitespace-nowrap text-sm [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}
@@ -98,7 +104,7 @@ function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-4 text-xs text-muted-foreground", className)}
+      className={cn("mt-4 text-sm text-muted-foreground", className)}
       {...props}
     />
   )

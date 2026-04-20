@@ -98,7 +98,7 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
 
   return (
     <section className="space-y-4">
-      <div className="card p-4 md:p-6">
+      <div className="surface-panel p-4 md:p-6">
         <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="page-title">Users Management</h2>
@@ -129,7 +129,7 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
               <div key={item.id} className="flex gap-2">
                 <button
                   type="button"
-                  className="rounded-lg bg-[var(--primary)] px-3 py-1 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
+                  className="rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
                   onClick={() => openEditModal(item)}
                   disabled={loading}
                 >
@@ -179,7 +179,7 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
           />
           <select
             name="role_id"
-            className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2.5 text-sm text-[var(--foreground)] outline-none focus:ring-2 focus:ring-green-200"
+            className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2.5 text-sm text-[var(--foreground)] outline-none focus:ring-2 focus:ring-[#b3dcfb]"
             defaultValue={editing?.role_id ?? roles[0]?.id}
             required
             disabled={loading}

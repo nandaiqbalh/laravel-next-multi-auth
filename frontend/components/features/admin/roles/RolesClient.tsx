@@ -81,7 +81,7 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
   }
 
   return (
-    <section className="card p-4 md:p-6">
+    <section className="surface-panel p-4 md:p-6">
       <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="page-title">Roles Management</h2>
@@ -113,7 +113,7 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
             <div key={item.id} className="flex gap-2">
               <button
                 type="button"
-                className="rounded-lg bg-[var(--primary)] px-3 py-1 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
+                className="rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
                 onClick={() => {
                   setEditing(item);
                   setModalOpen(true);

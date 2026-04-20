@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatCard } from "@/features/umkm/components/StatCard";
 import { umkmService } from "@/features/umkm/services/umkmService";
 
@@ -28,12 +27,10 @@ export default async function AdminUmkmDashboardPage() {
 
   return (
     <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Dashboard Admin UMKM</CardTitle>
-          <CardDescription>Ringkasan validasi profile, claim, dan pengajuan layanan.</CardDescription>
-        </CardHeader>
-      </Card>
+      <section>
+        <h1 className="page-title">Dashboard Admin UMKM</h1>
+        <p className="page-subtitle">Ringkasan validasi profile, claim, dan pengajuan layanan.</p>
+      </section>
 
       <section className="grid gap-4 md:grid-cols-3">
         <StatCard title="Total Profil" value={summary.profiles.total} description={`Verified: ${summary.profiles.verified}`} />

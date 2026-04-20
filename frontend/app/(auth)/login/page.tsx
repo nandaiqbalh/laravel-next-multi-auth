@@ -62,13 +62,28 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="relative mx-auto flex min-h-screen w-full items-center justify-center overflow-hidden px-4 py-10">
-      <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-green-300/25 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-20 right-0 h-80 w-80 rounded-full bg-emerald-300/20 blur-3xl" />
+    <main className="relative mx-auto grid min-h-screen w-full max-w-[1120px] items-center gap-6 overflow-hidden px-4 py-8 md:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
+      <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-sky-300/25 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-20 right-0 h-80 w-80 rounded-full bg-cyan-300/20 blur-3xl" />
 
-      <Card className="relative w-full max-w-md border-white/70 bg-white/95 backdrop-blur-sm">
-        <CardHeader className="rounded-b-2xl bg-gradient-to-br from-green-800 via-green-700 to-emerald-700 text-primary-foreground">
-          <CardTitle>Login Portal UMKM</CardTitle>
+      <section className="relative hidden rounded-2xl border border-sky-100/80 bg-gradient-to-br from-sky-700 via-sky-600 to-cyan-600 p-8 text-white shadow-[0_20px_48px_rgba(17,77,140,0.22)] lg:block">
+        <p className="inline-flex rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em]">
+          Portal Digital UMKM
+        </p>
+        <h1 className="mt-5 text-4xl font-bold leading-tight">Masuk ke Portal Layanan UMKM</h1>
+        <p className="mt-4 max-w-md text-sm text-sky-100">
+          Kelola profil usaha, pengajuan layanan, dan proses verifikasi dalam satu dashboard yang rapi dan responsif.
+        </p>
+        <div className="mt-8 space-y-3 text-sm text-sky-100">
+          <p>• Akses berbasis role untuk user, admin, dan superadmin</p>
+          <p>• Tracking status pengajuan secara real-time</p>
+          <p>• Audit trail untuk kontrol perubahan data</p>
+        </div>
+      </section>
+
+      <Card className="relative w-full border-white/70 bg-white/95 backdrop-blur-sm">
+        <CardHeader className="border-b border-[var(--border)] bg-gradient-to-r from-sky-700 to-cyan-700 text-primary-foreground">
+          <CardTitle className="text-xl font-bold">Login Portal UMKM</CardTitle>
           <CardDescription className="text-primary-foreground/85">Masuk menggunakan NIK dan password.</CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
@@ -82,16 +97,16 @@ export default function LoginPage() {
               <Input id="password" name="password" type="password" placeholder="Masukkan password" required />
             </div>
 
-            {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+            {error ? <p className="rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
 
-            <Button type="submit" disabled={loading} className="w-full">
+            <Button type="submit" disabled={loading} className="h-10 w-full text-sm font-semibold">
               {loading ? "Loading..." : "Masuk"}
             </Button>
           </form>
 
-          <p className="mt-4 text-sm text-muted-foreground">
+          <p className="mt-5 text-sm text-muted-foreground">
             Belum punya akun?{" "}
-            <Link href="/register" className="font-semibold text-primary underline">
+            <Link href="/register" className="font-semibold text-primary hover:underline">
               Daftar
             </Link>
           </p>

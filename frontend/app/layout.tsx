@@ -3,8 +3,10 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import { SessionProviderWrapper } from "@/components/layout/SessionProviderWrapper";
 import { bebasNeue, dmSans } from "@/lib/fonts";
-import { JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono, Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
+
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" className={cn("light", jetbrainsMono.variable)}>
+    <html lang="en" className={cn("light", jetbrainsMono.variable, "font-sans", inter.variable)}>
       <body className={`${bebasNeue.variable} ${dmSans.variable} antialiased`}>
         <SessionProviderWrapper>{children}</SessionProviderWrapper>
       </body>

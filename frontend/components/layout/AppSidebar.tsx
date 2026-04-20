@@ -31,8 +31,8 @@ export function AppSidebar({
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-[var(--sidebar-border)] px-5 py-6">
         <div>
-          <p className="text-base font-bold tracking-wide text-green-800">Portal UMKM</p>
-          <p className="mt-0.5 text-xs font-medium uppercase tracking-[0.16em] text-green-700/70">{title}</p>
+          <p className="text-base font-bold tracking-wide text-sky-800">Portal UMKM</p>
+          <p className="mt-0.5 text-xs font-medium uppercase tracking-[0.16em] text-sky-700/70">{title}</p>
         </div>
         {onClose && (
           <button
@@ -57,8 +57,8 @@ export function AppSidebar({
               onClick={onClose}
               className={`block w-full rounded-xl px-4 py-3 text-sm font-semibold transition ${
                 active
-                  ? "bg-gradient-to-r from-green-800 to-green-700 text-white shadow-[0_10px_20px_rgba(22,101,52,0.28)]"
-                  : "text-slate-600 hover:bg-white hover:text-green-800"
+                  ? "bg-gradient-to-r from-sky-700 to-sky-600 text-white shadow-[0_10px_20px_rgba(31,156,240,0.3)]"
+                  : "text-slate-600 hover:bg-white hover:text-sky-800"
               }`}
             >
               {item.label}

@@ -18,7 +18,7 @@ export function Pagination({
         type="button"
         onClick={() => onChange(Math.max(1, currentPage - 1))}
         disabled={currentPage <= 1}
-        className="rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-[var(--surface-soft)] disabled:opacity-40"
+        className="rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-[var(--surface-soft)] disabled:opacity-40"
       >
         Prev
       </button>
@@ -29,7 +29,7 @@ export function Pagination({
         type="button"
         onClick={() => onChange(Math.min(lastPage, currentPage + 1))}
         disabled={currentPage >= lastPage}
-        className="rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-[var(--surface-soft)] disabled:opacity-40"
+        className="rounded-lg border border-[var(--border)] bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-[var(--surface-soft)] disabled:opacity-40"
       >
         Next
       </button>

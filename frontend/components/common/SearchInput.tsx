@@ -1,5 +1,7 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
+
 /**
  * Search input supports parent-managed query state.
  */
@@ -13,11 +15,10 @@ export function SearchInput({
   placeholder: string;
 }) {
   return (
-    <input
+    <Input
       value={value}
       onChange={(event) => onChange(event.target.value)}
       placeholder={placeholder}
-      className="field"
     />
   );
 }
