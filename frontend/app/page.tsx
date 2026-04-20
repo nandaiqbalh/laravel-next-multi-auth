@@ -1,11 +1,11 @@
 import { auth } from "@/auth";
 import Link from "next/link";
+import LayananAccordion from "./LayananAccordion";
 
 export const metadata = {
-  title: '',
-  description: 'Halaman page.tsx.',
+  title: 'Portal Layanan Digital Kabupaten Kulon Progo',
+  description: 'Akses layanan digital Pemerintah Kabupaten Kulon Progo untuk UMKM, perizinan, dan dukungan usaha.',
 };
-
 
 /**
  * Home page renders product landing and does not auto-redirect.
@@ -24,14 +24,14 @@ export default async function HomePage() {
       <header className="sticky top-0 z-30 border-b border-gray-100 bg-white/95 backdrop-blur-sm">
         <div className="flex h-14 w-full items-center justify-between px-4 sm:px-8 lg:px-10">
           <div>
-            <p className="text-base font-bold text-sky-800">Portal UMKM Digital</p>
+            <p className="text-base font-bold text-sky-800">Portal Layanan Digital</p>
           </div>
 
           <div className="flex items-center gap-2">
             {session ? (
               <Link
                 href={dashboardHref}
-                className="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-sky-700"
+                className="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-semibold text-gray-600 hover:bg-sky-700"
               >
                 Dashboard
               </Link>
@@ -42,7 +42,7 @@ export default async function HomePage() {
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-sky-700"
+                  className="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-semibold text-gray-600 hover:bg-sky-700"
                 >
                   Daftar
                 </Link>
@@ -58,15 +58,15 @@ export default async function HomePage() {
 
         <div className="relative w-full px-2 text-center sm:px-6">
           <p className="inline-block rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em]">
-            Layanan Digital untuk UMKM
+            Pemerintah Kabupaten Kulon Progo
           </p>
           <h1 className="mt-5 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
-            Portal UMKM Digital
+            Portal Layanan Digital
             <br />
-            untuk Pengajuan dan Verifikasi Usaha
+            Kabupaten Kulon Progo
           </h1>
           <p className="mt-5 text-base text-sky-100 sm:text-lg">
-            Akses profil usaha, ajukan layanan digital, dan pantau status permohonan UMKM dalam satu portal.
+            Akses layanan publik, perizinan, dukungan usaha, dan program pemberdayaan UMKM secara digital.
           </p>
 
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
@@ -77,60 +77,28 @@ export default async function HomePage() {
               {session ? "Buka Dashboard" : "Mulai Sekarang"}
             </Link>
             <Link
-              href={session ? "/login" : "/login"}
+              href="#layanan"
               className="rounded-xl border border-white/30 bg-white/10 px-7 py-3 text-sm font-medium text-white hover:bg-white/20 sm:text-base"
             >
-              {session ? "Masuk Akun Lain" : "Login"}
+              Lihat Layanan
             </Link>
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-3 text-left sm:grid-cols-3">
-            <div className="rounded-xl border border-white/20 bg-white/10 p-4">
-              <p className="text-sm font-semibold">Profil UMKM</p>
-              <p className="mt-1 text-xs text-sky-100">Lengkapi data usaha untuk dapat mengajukan layanan.</p>
-            </div>
-            <div className="rounded-xl border border-white/20 bg-white/10 p-4">
-              <p className="text-sm font-semibold">Ajukan Layanan</p>
-              <p className="mt-1 text-xs text-sky-100">Kirim permohonan digital dan pantau prosesnya.</p>
-            </div>
-            <div className="rounded-xl border border-white/20 bg-white/10 p-4">
-              <p className="text-sm font-semibold">API Production Pattern</p>
-              <p className="mt-1 text-xs text-sky-100">Arsitektur repository-service-action yang rapi.</p>
-            </div>
-          </div>
+          
         </div>
       </section>
 
-      <section className="grid w-full grid-cols-1 gap-4 px-4 py-10 sm:grid-cols-3 sm:px-8 lg:px-10">
-        <article className="card p-5">
-          <h2 className="text-lg font-bold">Role-based Access</h2>
-          <p className="mt-2 text-sm text-[var(--muted)]">Routing dan dashboard terpisah untuk admin dan user.</p>
-        </article>
-        <article className="card p-5">
-          <h2 className="text-lg font-bold">Reusable UI</h2>
-          <p className="mt-2 text-sm text-[var(--muted)]">Komponen tabel, pagination, modal, dan confirm dialog siap pakai.</p>
-        </article>
-        <article className="card p-5">
-          <h2 className="text-lg font-bold">DX Friendly</h2>
-          <p className="mt-2 text-sm text-[var(--muted)]">Struktur codebase bersih untuk pengembangan cepat dan scalable.</p>
-        </article>
-      </section>
-
-      <section className="px-4 pb-12 sm:px-8 lg:px-10">
-        <div className="card bg-gradient-to-r from-sky-50 via-white to-cyan-50 p-6 sm:p-8">
-          <h3 className="text-2xl font-bold text-gray-900">Siap dipakai sebagai fondasi project baru</h3>
-          <p className="mt-2 text-sm text-gray-600">
-            Mulai dari auth flow, dashboard shell, reusable UI, sampai integrasi API backend sudah siap.
-            Tinggal lanjutkan fitur bisnis utama.
+      <section id="layanan" className="px-4 py-10 sm:px-8 lg:px-10">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-sky-700">Layanan yang Tersedia</p>
+          <h2 className="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">Layanan Tersedia Pemerintah Daerah</h2>
+          <p className="mt-3 text-base leading-7 text-slate-600">
+            Pilih layanan digital yang tersedia untuk dukungan usaha, sertifikasi, dan peningkatan kapasitas pelaku UMKM di Kabupaten Kulon Progo.
           </p>
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <Link href={session ? dashboardHref : "/register"} className="btn-primary rounded-lg px-5 py-2.5 text-sm font-semibold">
-              {session ? "Lanjut ke Dashboard" : "Daftar Sekarang"}
-            </Link>
-            <Link href="/login" className="rounded-lg border border-[var(--border)] bg-white px-5 py-2.5 text-sm font-semibold text-gray-700">
-              Login
-            </Link>
-          </div>
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <LayananAccordion />
         </div>
       </section>
     </main>
