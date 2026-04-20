@@ -68,11 +68,12 @@ export function PortalShell({
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
-        <aside className="border-r border-border p-4">
-          <Card className="h-full border-border">
-            <CardHeader className="bg-primary text-primary-foreground">
+    <div className="relative min-h-screen bg-background">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_10%,rgba(22,101,52,0.12)_0%,transparent_36%),radial-gradient(circle_at_90%_0%,rgba(74,222,128,0.12)_0%,transparent_28%)]" />
+      <div className="relative grid min-h-screen lg:grid-cols-[280px_1fr]">
+        <aside className="border-r border-border/80 p-4 md:p-5">
+          <Card className="h-full border-border/80 bg-[linear-gradient(180deg,#f9fcfa_0%,#f0f8f2_100%)]">
+            <CardHeader className="rounded-b-2xl bg-gradient-to-r from-green-800 to-green-700 text-primary-foreground">
               <CardTitle>Portal UMKM</CardTitle>
               <CardDescription className="text-primary-foreground/80">{role.replace("_", " ")}</CardDescription>
             </CardHeader>
@@ -85,7 +86,7 @@ export function PortalShell({
                     key={item.href}
                     asChild
                     variant={active ? "default" : "outline"}
-                    className={cn("w-full justify-start", active ? "bg-primary text-primary-foreground" : "")}
+                    className={cn("w-full justify-start", active ? "bg-primary text-primary-foreground" : "border-border/80 bg-white")}
                   >
                     <Link href={item.href}>{item.label}</Link>
                   </Button>
@@ -94,7 +95,7 @@ export function PortalShell({
 
               <Separator />
 
-              <div className="space-y-1">
+              <div className="rounded-xl border border-border/80 bg-white p-3 shadow-sm">
                 <p className="font-medium">{userName ?? "User"}</p>
                 <p className="text-muted-foreground">{userEmail ?? "-"}</p>
               </div>

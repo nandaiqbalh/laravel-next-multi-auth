@@ -15,12 +15,12 @@ export function DataTable({
   emptyLabel: string;
 }) {
   return (
-    <div className="overflow-x-auto rounded-xl border border-[var(--border)] bg-white">
+    <div className="overflow-x-auto rounded-2xl border border-[var(--border)] bg-white shadow-[0_12px_30px_rgba(12,33,20,0.08)]">
       <table className="min-w-full">
         <thead className="bg-[var(--surface-soft)] text-left">
           <tr>
             {columns.map((column) => (
-              <th key={column} className="px-4 py-3 text-xs uppercase tracking-wide text-gray-600">
+              <th key={column} className="px-4 py-3 text-xs font-semibold tracking-wide text-slate-600 uppercase">
                 {column}
               </th>
             ))}
@@ -35,7 +35,7 @@ export function DataTable({
             </tr>
           ) : (
             rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="border-t border-[var(--border)]">
+              <tr key={rowIndex} className="border-t border-[var(--border)]/80 hover:bg-[var(--surface-soft)]/65">
                 {row.map((cell, cellIndex) => (
                   <td key={`${rowIndex}-${cellIndex}`} className="px-4 py-3 text-sm">
                     {cell}

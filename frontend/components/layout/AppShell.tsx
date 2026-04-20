@@ -44,8 +44,9 @@ export function AppShell({
   }
 
   return (
-    <div className="flex min-h-screen bg-neutral-50">
-      <aside className="hidden min-h-screen w-60 shrink-0 border-r border-gray-200 bg-white lg:flex lg:flex-col lg:sticky lg:top-0">
+    <div className="relative flex min-h-screen bg-transparent">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_8%_10%,rgba(22,101,52,0.12)_0%,transparent_36%),radial-gradient(circle_at_90%_0%,rgba(34,197,94,0.1)_0%,transparent_30%)]" />
+      <aside className="relative hidden min-h-screen w-64 shrink-0 border-r border-[var(--sidebar-border)] bg-[linear-gradient(180deg,#f7fbf8_0%,#eff7f1_100%)] lg:sticky lg:top-0 lg:flex lg:flex-col">
         <AppSidebar
           title={currentTitle}
           items={items}
@@ -59,7 +60,7 @@ export function AppShell({
       {mobileOpen && (
         <>
           <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl">
+          <div className="fixed inset-y-0 left-0 z-50 w-72 border-r border-[var(--sidebar-border)] bg-[linear-gradient(180deg,#f7fbf8_0%,#eff7f1_100%)] shadow-2xl">
             <AppSidebar
               title={currentTitle}
               items={items}
@@ -73,12 +74,12 @@ export function AppShell({
         </>
       )}
 
-      <div className="flex-1">
-        <div className="sticky top-0 z-30 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 shadow-sm lg:hidden">
+      <div className="relative flex-1">
+        <div className="sticky top-0 z-30 flex items-center justify-between border-b border-[var(--border)] bg-white/90 px-4 py-3 backdrop-blur-sm lg:hidden">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+            className="rounded-lg p-2 text-slate-600 hover:bg-[var(--surface-soft)] hover:text-slate-900"
             aria-label="Buka navigasi"
           >
             ☰
@@ -87,7 +88,7 @@ export function AppShell({
           <div className="w-9" />
         </div>
 
-        <main className="p-4 md:p-8">
+        <main className="relative p-4 md:p-8">
           {children}
         </main>
       </div>

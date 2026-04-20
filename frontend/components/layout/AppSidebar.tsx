@@ -29,16 +29,16 @@ export function AppSidebar({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-5">
+      <div className="flex items-center justify-between border-b border-[var(--sidebar-border)] px-5 py-6">
         <div>
-          <p className="text-base font-bold text-green-800">Fullstack Starter</p>
-          <p className="text-xs text-gray-400">{title}</p>
+          <p className="text-base font-bold tracking-wide text-green-800">Portal UMKM</p>
+          <p className="mt-0.5 text-xs font-medium uppercase tracking-[0.16em] text-green-700/70">{title}</p>
         </div>
         {onClose && (
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-lg p-1.5 text-slate-400 hover:bg-white hover:text-slate-700"
             aria-label="Tutup navigasi"
           >
             ×
@@ -46,7 +46,7 @@ export function AppSidebar({
         )}
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 py-4">
+      <nav className="flex flex-1 flex-col gap-1.5 overflow-y-auto px-4 py-5">
         {items.map((item) => {
           const active = pathname === item.href || pathname?.startsWith(`${item.href}/`);
 
@@ -55,10 +55,10 @@ export function AppSidebar({
               key={item.href}
               href={item.href}
               onClick={onClose}
-              className={`block w-full rounded-xl px-4 py-3 text-sm font-medium transition ${
+              className={`block w-full rounded-xl px-4 py-3 text-sm font-semibold transition ${
                 active
-                  ? "bg-green-700 text-white"
-                  : "text-gray-600 hover:bg-green-50 hover:text-green-800"
+                  ? "bg-gradient-to-r from-green-800 to-green-700 text-white shadow-[0_10px_20px_rgba(22,101,52,0.28)]"
+                  : "text-slate-600 hover:bg-white hover:text-green-800"
               }`}
             >
               {item.label}
@@ -67,22 +67,22 @@ export function AppSidebar({
         })}
       </nav>
 
-      <div className="border-t border-gray-100 px-4 py-3">
-        <div className="mb-3 rounded-xl border border-gray-100 bg-gray-50 p-3">
-          <p className="text-sm font-semibold text-gray-800">{profileName ?? "User"}</p>
-          <p className="text-xs text-gray-500">{profileEmail ?? "-"}</p>
+      <div className="border-t border-[var(--sidebar-border)] px-5 py-4">
+        <div className="mb-3 rounded-xl border border-[var(--sidebar-border)] bg-white p-3 shadow-sm">
+          <p className="text-sm font-semibold text-slate-800">{profileName ?? "User"}</p>
+          <p className="text-xs text-slate-500">{profileEmail ?? "-"}</p>
         </div>
         {onLogout && (
           <button
             type="button"
             onClick={onLogout}
             disabled={logoutLoading}
-            className="mb-3 w-full rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
+            className="mb-3 w-full rounded-xl bg-red-600 px-3 py-2.5 text-sm font-semibold text-white hover:bg-red-700"
           >
             {logoutLoading ? "Memproses..." : "Logout"}
           </button>
         )}
-        <p className="text-xs text-gray-400">© 2026 Fullstack Starter</p>
+        <p className="text-xs text-slate-400">© 2026 Portal UMKM</p>
       </div>
     </div>
   );

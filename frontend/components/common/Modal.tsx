@@ -25,7 +25,7 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/35 p-4 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="w-full max-w-lg rounded-2xl border border-[var(--border)] bg-white p-6 shadow-xl"
+        className="w-full max-w-lg rounded-2xl border border-[var(--border)] bg-white p-6 shadow-[0_20px_48px_rgba(8,25,15,0.28)]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
@@ -35,7 +35,7 @@ export function Modal({
             onClick={onClose}
             disabled={closeDisabled}
             aria-label="Tutup dialog"
-            className="rounded-lg px-2 py-1 text-xl leading-none text-gray-600 hover:bg-gray-100"
+            className="rounded-lg px-2 py-1 text-xl leading-none text-slate-500 hover:bg-[var(--surface-soft)]"
           >
             ×
           </button>

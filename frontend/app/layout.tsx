@@ -18,7 +18,7 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" className={cn("light", "font-mono", jetbrainsMono.variable)}>
+    <html lang="en" className={cn("light", jetbrainsMono.variable)}>
       <body className={`${bebasNeue.variable} ${dmSans.variable} antialiased`}>
         <SessionProviderWrapper>{children}</SessionProviderWrapper>
       </body>

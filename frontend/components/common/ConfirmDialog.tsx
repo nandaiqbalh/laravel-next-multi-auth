@@ -29,7 +29,7 @@ export function ConfirmDialog({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-4 backdrop-blur-sm" onClick={onCancel}>
       <div
-        className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-6 shadow-xl"
+        className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-6 shadow-[0_20px_48px_rgba(8,25,15,0.28)]"
         onClick={(event) => event.stopPropagation()}
       >
         <h3 className="text-lg font-semibold text-[var(--foreground)]">{title}</h3>
@@ -40,7 +40,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--foreground)]"
+            className="rounded-xl border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--surface-soft)]"
           >
             {cancelLabel}
           </button>
@@ -48,7 +48,7 @@ export function ConfirmDialog({
             type="button"
             onClick={onConfirm}
             disabled={loading}
-            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
+            className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700"
           >
             {loading ? "Memproses..." : confirmLabel}
           </button>

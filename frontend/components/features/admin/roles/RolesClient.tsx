@@ -113,7 +113,7 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
             <div key={item.id} className="flex gap-2">
               <button
                 type="button"
-                className="rounded bg-black px-3 py-1 text-xs text-white"
+                className="rounded-lg bg-[var(--primary)] px-3 py-1 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
                 onClick={() => {
                   setEditing(item);
                   setModalOpen(true);
@@ -124,7 +124,7 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
               </button>
               <button
                 type="button"
-                className="rounded bg-red-600 px-3 py-1 text-xs text-white"
+                className="rounded-lg bg-red-600 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
                 onClick={() => setDeletingId(item.id)}
                 disabled={loading}
               >
