@@ -3,6 +3,10 @@ import type { ReactNode } from "react";
 import "./globals.css";
 import { SessionProviderWrapper } from "@/components/layout/SessionProviderWrapper";
 import { bebasNeue, dmSans } from "@/lib/fonts";
+import { JetBrains_Mono } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
 export const metadata: Metadata = {
   title: "Next Laravel Multi Auth",
@@ -14,7 +18,7 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" className="light">
+    <html lang="en" className={cn("light", "font-mono", jetbrainsMono.variable)}>
       <body className={`${bebasNeue.variable} ${dmSans.variable} antialiased`}>
         <SessionProviderWrapper>{children}</SessionProviderWrapper>
       </body>
