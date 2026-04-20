@@ -6,7 +6,12 @@ import Link from "next/link";
  */
 export default async function HomePage() {
   const session = await auth();
-  const dashboardHref = session?.user.role === "admin" ? "/admin/dashboard" : "/dashboard";
+  const dashboardHref =
+    session?.user.role === "SUPERADMIN"
+      ? "/superadmin/dashboard"
+      : session?.user.role === "UMKM_ADMIN"
+        ? "/admin/umkm/dashboard"
+        : "/dashboard";
 
   return (
     <main className="min-h-screen">

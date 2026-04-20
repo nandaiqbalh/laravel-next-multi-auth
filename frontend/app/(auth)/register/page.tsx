@@ -5,6 +5,30 @@ import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+/**
+ * Resolve default dashboard route based on role.
+ * @param role Role name from session.
+ * @returns Dashboard path.
+ *
+ * Usage:
+ * const href = resolveDashboardHref(session?.user?.role);
+ */
+function resolveDashboardHref(role?: string): string {
+  if (role === "SUPERADMIN") {
+    return "/superadmin/dashboard";
+  }
+
+  if (role === "UMKM_ADMIN") {
+    return "/admin/umkm/dashboard";
+  }
+
+  return "/dashboard";
+}
 
 /**
  * Register page handles account creation then auto login.
@@ -20,15 +44,16 @@ export default function RegisterPage() {
     setError("");
 
     const formData = new FormData(event.currentTarget);
+    const nik = String(formData.get("nik") ?? "");
     const name = String(formData.get("name") ?? "");
     const email = String(formData.get("email") ?? "");
     const password = String(formData.get("password") ?? "");
 
     try {
-      await registerAction({ name, email, password });
-      await signIn("credentials", { email, password, redirect: false });
+      await registerAction({ nik, name, email, password });
+      await signIn("credentials", { nik, password, redirect: false });
       const session = await getSession();
-      const dashboardHref = session?.user?.role === "admin" ? "/admin/dashboard" : "/dashboard";
+      const dashboardHref = resolveDashboardHref(session?.user?.role);
 
       router.push(dashboardHref);
       router.refresh();
@@ -41,27 +66,45 @@ export default function RegisterPage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-4">
-      <section className="card w-full p-6 md:p-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-[var(--primary-dark)]">Auth Portal</p>
-        <h1 className="mt-2 text-3xl font-bold">Register</h1>
-        <p className="page-subtitle">Buat akun baru sebagai user.</p>
+      <Card className="w-full">
+        <CardHeader className="bg-primary text-primary-foreground">
+          <CardTitle>Registrasi UMKM User</CardTitle>
+          <CardDescription className="text-primary-foreground/80">Daftarkan akun dengan NIK, email, dan password.</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="nik">NIK</Label>
+              <Input id="nik" name="nik" placeholder="Masukkan NIK" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="name">Nama</Label>
+              <Input id="name" name="name" placeholder="Nama lengkap" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" name="email" type="email" placeholder="contoh@email.com" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" name="password" type="password" placeholder="Minimal 6 karakter" required />
+            </div>
 
-        <form onSubmit={onSubmit} className="mt-6 space-y-3">
-          <input className="field" name="name" placeholder="Nama" required />
-          <input className="field" name="email" type="email" placeholder="Email" required />
-          <input className="field" name="password" type="password" placeholder="Password" required />
+            {error ? <p className="text-destructive">{error}</p> : null}
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+            <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground">
+              {loading ? "Loading..." : "Daftar"}
+            </Button>
+          </form>
 
-          <button className="btn-primary w-full rounded-xl px-4 py-3 font-semibold" disabled={loading} type="submit">
-            {loading ? "Loading..." : "Daftar"}
-          </button>
-        </form>
-
-        <p className="mt-4 text-sm text-gray-600">
-          Sudah punya akun? <Link href="/login" className="font-semibold text-[var(--primary-dark)]">Login</Link>
-        </p>
-      </section>
+          <p className="mt-4 text-muted-foreground">
+            Sudah punya akun?{" "}
+            <Link href="/login" className="text-primary underline">
+              Login
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
     </main>
   );
 }

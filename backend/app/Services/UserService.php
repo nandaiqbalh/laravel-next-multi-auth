@@ -46,7 +46,7 @@ class UserService
     /**
      * Retrieve one user by id.
      */
-    public function find(int $id): User
+    public function find(string $id): User
     {
         return $this->userRepository->findOrFail($id);
     }
@@ -54,7 +54,7 @@ class UserService
     /**
      * Update user by id.
      */
-    public function update(int $id, array $payload): User
+    public function update(string $id, array $payload): User
     {
         if (! empty($payload['password'])) {
             $payload['password'] = Hash::make($payload['password']);
@@ -70,7 +70,7 @@ class UserService
     /**
      * Delete user by id.
      */
-    public function delete(int $id): void
+    public function delete(string $id): void
     {
         $user = $this->userRepository->findOrFail($id);
         $this->userRepository->delete($user);

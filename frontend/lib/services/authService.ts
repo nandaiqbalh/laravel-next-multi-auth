@@ -14,11 +14,16 @@ export const authService = {
       throw new Error(response.message);
     }
 
+    if (!response.data) {
+      throw new Error("Login response data is empty");
+    }
+
     return {
       id: String(response.data.user.id),
+      nik: response.data.user.nik,
       name: response.data.user.name,
       email: response.data.user.email,
-      role: response.data.user.role?.name ?? "user",
+      role: response.data.user.role?.name ?? "UMKM_USER",
       token: response.data.token,
     };
   },
@@ -31,6 +36,10 @@ export const authService = {
 
     if (response.error) {
       throw new Error(response.message);
+    }
+
+    if (!response.data) {
+      throw new Error("Register response data is empty");
     }
 
     return response;

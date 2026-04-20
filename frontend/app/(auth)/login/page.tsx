@@ -4,6 +4,30 @@ import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+/**
+ * Resolve default dashboard route based on role.
+ * @param role Role name from session.
+ * @returns Dashboard path.
+ *
+ * Usage:
+ * const href = resolveDashboardHref(session?.user?.role);
+ */
+function resolveDashboardHref(role?: string): string {
+  if (role === "SUPERADMIN") {
+    return "/superadmin/dashboard";
+  }
+
+  if (role === "UMKM_ADMIN") {
+    return "/admin/umkm/dashboard";
+  }
+
+  return "/dashboard";
+}
 
 /**
  * Login page handles credentials authentication via NextAuth.
@@ -19,19 +43,19 @@ export default function LoginPage() {
     setError("");
 
     const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email") ?? "");
+    const nik = String(formData.get("nik") ?? "");
     const password = String(formData.get("password") ?? "");
 
-    const result = await signIn("credentials", { email, password, redirect: false });
+    const result = await signIn("credentials", { nik, password, redirect: false });
 
     if (result?.error) {
-      setError("Login gagal. Pastikan email dan password benar.");
+      setError("Login gagal. Pastikan NIK dan password benar.");
       setLoading(false);
       return;
     }
 
     const session = await getSession();
-    const dashboardHref = session?.user?.role === "admin" ? "/admin/dashboard" : "/dashboard";
+    const dashboardHref = resolveDashboardHref(session?.user?.role);
 
     router.push(dashboardHref);
     router.refresh();
@@ -39,26 +63,37 @@ export default function LoginPage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md items-center px-4">
-      <section className="card w-full p-6 md:p-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-[var(--primary-dark)]">Auth Portal</p>
-        <h1 className="mt-2 text-3xl font-bold">Login</h1>
-        <p className="page-subtitle">Masuk dengan akun yang sudah terdaftar.</p>
+      <Card className="w-full">
+        <CardHeader className="bg-primary text-primary-foreground">
+          <CardTitle>Login Portal UMKM</CardTitle>
+          <CardDescription className="text-primary-foreground/80">Masuk menggunakan NIK dan password.</CardDescription>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="nik">NIK</Label>
+              <Input id="nik" name="nik" placeholder="Masukkan NIK" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" name="password" type="password" placeholder="Masukkan password" required />
+            </div>
 
-        <form onSubmit={onSubmit} className="mt-6 space-y-3">
-          <input className="field" name="email" type="email" placeholder="Email" required />
-          <input className="field" name="password" type="password" placeholder="Password" required />
+            {error ? <p className="text-destructive">{error}</p> : null}
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+            <Button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground">
+              {loading ? "Loading..." : "Masuk"}
+            </Button>
+          </form>
 
-          <button className="btn-primary w-full rounded-xl px-4 py-3 font-semibold" disabled={loading} type="submit">
-            {loading ? "Loading..." : "Masuk"}
-          </button>
-        </form>
-
-        <p className="mt-4 text-sm text-gray-600">
-          Belum punya akun? <Link href="/register" className="font-semibold text-[var(--primary-dark)]">Daftar</Link>
-        </p>
-      </section>
+          <p className="mt-4 text-muted-foreground">
+            Belum punya akun?{" "}
+            <Link href="/register" className="text-primary underline">
+              Daftar
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
     </main>
   );
 }

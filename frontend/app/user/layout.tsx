@@ -13,8 +13,12 @@ export default async function UserLayout({ children }: { children: ReactNode }) 
     redirect("/login");
   }
 
-  if (session.user.role === "admin") {
-    redirect("/admin/dashboard");
+  if (session.user.role === "SUPERADMIN") {
+    redirect("/superadmin/dashboard");
+  }
+
+  if (session.user.role === "UMKM_ADMIN") {
+    redirect("/admin/umkm/dashboard");
   }
 
   return <AppShell role="user">{children}</AppShell>;

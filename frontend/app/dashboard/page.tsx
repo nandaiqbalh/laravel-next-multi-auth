@@ -1,19 +1,40 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ClaimUmkmForm } from "@/features/umkm/forms/ClaimUmkmForm";
+import { PortalShell } from "@/features/umkm/components/PortalShell";
+import { StatCard } from "@/features/umkm/components/StatCard";
+import { umkmService } from "@/features/umkm/services/umkmService";
+import { requireRole } from "@/features/umkm/utils/guards";
 
 /**
- * Shared dashboard entry route for authenticated users.
+ * Dashboard page for UMKM_USER role.
  */
 export default async function DashboardEntryPage() {
-  const session = await auth();
+  const context = await requireRole(["UMKM_USER"]);
 
-  if (!session) {
-    redirect("/login");
-  }
+  const [profile, claim, submissions] = await Promise.all([
+    umkmService.getMyProfile(context.token),
+    umkmService.getLatestClaim(context.token),
+    umkmService.getMySubmissions(context.token),
+  ]);
 
-  if (session.user.role === "admin") {
-    redirect("/admin/dashboard");
-  }
+  return (
+    <PortalShell role="UMKM_USER" userName={context.user.name} userEmail={context.user.email}>
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Dashboard UMKM User</CardTitle>
+            <CardDescription>Ringkasan status profil, claim, dan pengajuan layanan Anda.</CardDescription>
+          </CardHeader>
+        </Card>
 
-  redirect("/user/dashboard");
+        <section className="grid gap-4 md:grid-cols-3">
+          <StatCard title="Status Profil" value={profile ? (profile.is_verified ? "Terverifikasi" : "Belum Verifikasi") : "Belum Isi Profil"} />
+          <StatCard title="Status Claim" value={claim?.status ?? "Belum Ajukan"} />
+          <StatCard title="Total Pengajuan" value={submissions.meta.total} />
+        </section>
+
+        <ClaimUmkmForm latestClaim={claim} />
+      </div>
+    </PortalShell>
+  );
 }

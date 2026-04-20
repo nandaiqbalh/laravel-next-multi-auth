@@ -14,7 +14,7 @@ class RoleMiddleware
     /**
      * Handle role-based access for protected endpoints.
      */
-    public function handle(Request $request, Closure $next, string $roleName): Response
+    public function handle(Request $request, Closure $next, string ...$roleNames): Response
     {
         $user = $request->user();
 
@@ -22,7 +22,7 @@ class RoleMiddleware
             $user?->load('role');
         }
 
-        if (! $user || ! $user->role || $user->role->name !== $roleName) {
+        if (! $user || ! $user->role || ! in_array($user->role->name, $roleNames, true)) {
             return response()->json([
                 'error' => true,
                 'message' => 'Forbidden access for current role',

@@ -24,6 +24,12 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'nik' => [
+                'required',
+                'string',
+                'max:32',
+                Rule::unique('users', 'nik')->ignore($this->route('user')),
+            ],
             'name' => ['required', 'string', 'max:100'],
             'email' => [
                 'required',

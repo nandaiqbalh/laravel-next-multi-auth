@@ -27,7 +27,7 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
   const [loading, startTransition] = useTransition();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<User | null>(null);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     startTransition(async () => {

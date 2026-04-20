@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import { AppShell } from "@/components/layout/AppShell";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
@@ -13,9 +12,9 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     redirect("/login");
   }
 
-  if (session.user.role !== "admin") {
-    redirect("/user/dashboard");
+  if (session.user.role !== "UMKM_ADMIN" && session.user.role !== "SUPERADMIN") {
+    redirect("/dashboard");
   }
 
-  return <AppShell role="admin">{children}</AppShell>;
+  return children;
 }

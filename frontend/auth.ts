@@ -10,17 +10,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: "Email", type: "email" },
+        nik: { label: "NIK", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: Partial<Record<"email" | "password", unknown>> | undefined) {
-        if (!credentials?.email || !credentials?.password) {
+      async authorize(credentials: Partial<Record<"nik" | "password", unknown>> | undefined) {
+        if (!credentials?.nik || !credentials?.password) {
           return null;
         }
 
         try {
           return await authService.login({
-            email: String(credentials.email),
+            nik: String(credentials.nik),
             password: String(credentials.password),
           });
         } catch (error) {
@@ -34,6 +34,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }: { token: any; user?: any }) {
       if (user) {
         token.id = user.id;
+        token.nik = user.nik;
         token.role = user.role;
         token.token = user.token;
       }
@@ -42,6 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async session({ session, token }: { session: any; token: any }) {
       session.user.id = token.id;
+      session.user.nik = token.nik;
       session.user.role = token.role;
       session.token = token.token;
 

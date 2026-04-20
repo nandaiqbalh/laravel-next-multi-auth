@@ -6,7 +6,7 @@ import { ApiResponse, User } from "@/lib/types";
  * Login payload contract.
  */
 export type LoginPayload = {
-  email: string;
+  nik: string;
   password: string;
 };
 
@@ -14,6 +14,7 @@ export type LoginPayload = {
  * Register payload contract.
  */
 export type RegisterPayload = {
+  nik: string;
   name: string;
   email: string;
   password: string;

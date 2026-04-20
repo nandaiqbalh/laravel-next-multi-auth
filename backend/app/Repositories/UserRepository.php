@@ -19,9 +19,10 @@ class UserRepository
             ->with('role')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('nik', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             })
-            ->orderByDesc('id')
+            ->orderByDesc('created_at')
             ->paginate($perPage)
             ->withQueryString();
     }
@@ -37,9 +38,17 @@ class UserRepository
     /**
      * Find user by id with role relation.
      */
-    public function findOrFail(int $id): User
+    public function findOrFail(string $id): User
     {
         return User::query()->with('role')->findOrFail($id);
+    }
+
+    /**
+     * Find user by NIK with role relation.
+     */
+    public function findByNik(string $nik): ?User
+    {
+        return User::query()->with('role')->where('nik', $nik)->first();
     }
 
     /**

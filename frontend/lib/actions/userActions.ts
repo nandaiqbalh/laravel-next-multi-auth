@@ -38,7 +38,7 @@ export async function createUserAction(payload: {
  * Update user using admin bearer token from session.
  */
 export async function updateUserAction(
-  id: number,
+  id: string,
   payload: { name: string; email: string; password?: string; role_id: number },
 ) {
   const session = await auth();
@@ -53,7 +53,7 @@ export async function updateUserAction(
 /**
  * Remove user using admin bearer token from session.
  */
-export async function deleteUserAction(id: number) {
+export async function deleteUserAction(id: string) {
   const session = await auth();
 
   if (!session?.token) {

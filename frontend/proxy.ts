@@ -8,22 +8,37 @@ export default auth((req: any) => {
   const isLoggedIn = !!req.auth;
   const pathname = req.nextUrl.pathname;
   const role = req.auth?.user?.role;
+  const isUserArea = pathname === "/dashboard" || pathname.startsWith("/profil-umkm") || pathname.startsWith("/pengajuan");
+  const isAdminArea = pathname.startsWith("/admin/umkm");
+  const isSuperadminArea = pathname.startsWith("/superadmin");
 
-  if (!isLoggedIn && (pathname.startsWith("/admin") || pathname.startsWith("/user"))) {
+  if (!isLoggedIn && (isUserArea || isAdminArea || isSuperadminArea)) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if (pathname.startsWith("/admin") && role !== "admin") {
-    return NextResponse.redirect(new URL("/user/dashboard", req.url));
+  if (isSuperadminArea && role !== "SUPERADMIN") {
+    if (role === "UMKM_ADMIN") {
+      return NextResponse.redirect(new URL("/admin/umkm/dashboard", req.url));
+    }
+
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  if (pathname.startsWith("/user") && role === "admin") {
-    return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+  if (isAdminArea && role !== "UMKM_ADMIN" && role !== "SUPERADMIN") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
+  if (isUserArea && role !== "UMKM_USER") {
+    if (role === "SUPERADMIN") {
+      return NextResponse.redirect(new URL("/superadmin/dashboard", req.url));
+    }
+
+    return NextResponse.redirect(new URL("/admin/umkm/dashboard", req.url));
   }
 
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/admin/:path*", "/user/:path*"],
+  matcher: ["/admin/:path*", "/superadmin/:path*", "/dashboard", "/profil-umkm", "/pengajuan"],
 };

@@ -17,11 +17,12 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminRole = Role::query()->where('name', 'admin')->firstOrFail();
+        $adminRole = Role::query()->where('name', 'SUPERADMIN')->firstOrFail();
 
         User::query()->updateOrCreate(
             ['email' => 'admin@example.com'],
             [
+                'nik' => '0000000000000001',
                 'name' => 'System Admin',
                 'password' => Hash::make('password123'),
                 'role_id' => $adminRole->id,

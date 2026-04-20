@@ -19,7 +19,8 @@ export type Role = {
  * User entity contract.
  */
 export type User = {
-  id: number;
+  id: string;
+  nik: string;
   name: string;
   email: string;
   role_id: number;

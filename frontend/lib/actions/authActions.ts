@@ -6,7 +6,7 @@ import { authService } from "@/lib/services/authService";
 /**
  * Register user account from server action layer.
  */
-export async function registerAction(payload: { name: string; email: string; password: string }) {
+export async function registerAction(payload: { nik: string; name: string; email: string; password: string }) {
   return authService.register(payload);
 }
 

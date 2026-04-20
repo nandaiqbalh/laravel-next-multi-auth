@@ -31,7 +31,7 @@ export const userRepository = {
   /**
    * Update user through admin endpoint.
    */
-  async update(token: string, id: number, payload: Partial<User> & { password?: string }) {
+  async update(token: string, id: string, payload: Partial<User> & { password?: string }) {
     const response = await httpClient.put<ApiResponse<User>>(`/users/${id}`, payload, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -42,7 +42,7 @@ export const userRepository = {
   /**
    * Delete user through admin endpoint.
    */
-  async remove(token: string, id: number) {
+  async remove(token: string, id: string) {
     const response = await httpClient.delete<ApiResponse<null>>(`/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });

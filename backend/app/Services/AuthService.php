@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Repositories\UserRepository;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Hash;
+use RuntimeException;
 
 /**
  * Auth service encapsulates authentication and token business logic.
@@ -22,7 +23,11 @@ class AuthService
     public function register(array $payload): array
     {
         if (empty($payload['role_id'])) {
-            $payload['role_id'] = Role::query()->where('name', 'user')->value('id');
+            $payload['role_id'] = Role::query()->where('name', 'UMKM_USER')->value('id');
+
+            if (! $payload['role_id']) {
+                throw new RuntimeException('Default UMKM role not found');
+            }
         }
 
         $payload['password'] = Hash::make($payload['password']);
@@ -41,7 +46,7 @@ class AuthService
      */
     public function login(array $payload): array
     {
-        $user = $this->userRepository->findByEmail($payload['email']);
+        $user = $this->userRepository->findByNik($payload['nik']);
 
         if (! $user || ! Hash::check($payload['password'], $user->password)) {
             throw new AuthenticationException('Invalid credentials');

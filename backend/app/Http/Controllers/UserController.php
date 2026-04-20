@@ -39,7 +39,7 @@ class UserController extends Controller
     /**
      * Display one user detail.
      */
-    public function show(int $user)
+    public function show(string $user)
     {
         return $this->successResponse('User fetched', $this->userService->find($user));
     }
@@ -47,7 +47,7 @@ class UserController extends Controller
     /**
      * Update user record.
      */
-    public function update(UpdateUserRequest $request, int $user)
+    public function update(UpdateUserRequest $request, string $user)
     {
         $updatedUser = $this->userService->update($user, $request->validated());
 
@@ -57,7 +57,7 @@ class UserController extends Controller
     /**
      * Delete user record.
      */
-    public function destroy(int $user)
+    public function destroy(string $user)
     {
         $this->userService->delete($user);
 
