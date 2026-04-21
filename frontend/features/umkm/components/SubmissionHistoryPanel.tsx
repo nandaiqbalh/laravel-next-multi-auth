@@ -46,13 +46,6 @@ export function SubmissionHistoryPanel({ submissions }: { submissions: Submissio
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1">
               <CardTitle>Riwayat Pengajuan</CardTitle>
-              <p className="text-sm text-slate-500">Filter riwayat berdasarkan perangkat daerah.</p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Link href="/user/pengajuan/create">
-                <Button>Ajukan</Button>
-              </Link>
             </div>
           </div>
         </CardHeader>
@@ -60,15 +53,15 @@ export function SubmissionHistoryPanel({ submissions }: { submissions: Submissio
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_280px]">
             <div className="space-y-2">
-              <Label htmlFor="filter_perangkat_daerah">Filter Perangkat Daerah</Label>
               <Select
-                value={selectedPerangkatDaerahId !== null ? String(selectedPerangkatDaerahId) : ""}
-                onValueChange={(value) => setSelectedPerangkatDaerahId(value ? Number(value) : null)}
+                value={selectedPerangkatDaerahId !== null ? String(selectedPerangkatDaerahId) : "all"}
+                onValueChange={(value) => setSelectedPerangkatDaerahId(value === "all" ? null : Number(value))}
               >
                 <SelectTrigger id="filter_perangkat_daerah" className="w-full">
                   <SelectValue placeholder="Semua perangkat daerah" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="all">Semua perangkat daerah</SelectItem>
                   {perangkatOptions.map((option) => (
                     <SelectItem key={option.id} value={String(option.id)}>
                       {option.name}
@@ -78,11 +71,7 @@ export function SubmissionHistoryPanel({ submissions }: { submissions: Submissio
               </Select>
             </div>
           </div>
-        </CardContent>
-      </Card>
 
-      <Card>
-        <CardContent>
           <SubmissionTable submissions={filteredSubmissions} />
         </CardContent>
       </Card>

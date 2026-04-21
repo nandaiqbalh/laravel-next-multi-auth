@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { DataTable } from "@/components/common/DataTable";
 import { ErrorBanner } from "@/components/common/ErrorBanner";
+import { InputField } from "@/components/common/InputField";
 import { Modal } from "@/components/common/Modal";
 import {
   createServiceFormFieldAction,
@@ -14,6 +15,7 @@ import {
 } from "@/lib/actions/serviceManagementActions";
 import { ServiceFormField } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const FIELD_TYPE_OPTIONS = ["text", "textarea", "select", "number", "date", "file", "radio", "checkbox", "email", "tel"];
 
@@ -210,46 +212,90 @@ export function ServiceFormBuilderClient({
         title={editing ? "Edit Field" : "Tambah Field"}
       >
         <form onSubmit={onSubmit} className="space-y-3">
-          <input name="label" defaultValue={editing?.label ?? ""} className="field" placeholder="Label" required disabled={loading} />
-          <input name="name" defaultValue={editing?.name ?? ""} className="field" placeholder="Name (snake_case)" required disabled={loading} />
-          <select name="type" defaultValue={editing?.type ?? "text"} className="field" required disabled={loading}>
-            {FIELD_TYPE_OPTIONS.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-          <select name="is_required" defaultValue={editing?.is_required ? "1" : "0"} className="field" disabled={loading}>
-            <option value="1">Wajib diisi</option>
-            <option value="0">Opsional</option>
-          </select>
-          <input
-            name="order"
-            type="number"
-            min={1}
-            defaultValue={editing?.order ?? fields.length + 1}
-            className="field"
+          <InputField
+            id="label"
+            name="label"
+            label="Label"
+            defaultValue={editing?.label ?? ""}
+            placeholder="Label"
             required
             disabled={loading}
           />
-          <input
+          <InputField
+            id="name"
+            name="name"
+            label="Name (snake_case)"
+            defaultValue={editing?.name ?? ""}
+            placeholder="Name (snake_case)"
+            required
+            disabled={loading}
+          />
+          <div className="space-y-2">
+            <label htmlFor="type" className="block text-sm font-medium text-slate-700">
+              Type
+            </label>
+            <Select name="type" defaultValue={editing?.type ?? "text"} disabled={loading}>
+              <SelectTrigger id="type" className="w-full">
+                <SelectValue placeholder="Pilih tipe" />
+              </SelectTrigger>
+              <SelectContent>
+                {FIELD_TYPE_OPTIONS.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="is_required" className="block text-sm font-medium text-slate-700">
+              Wajib diisi
+            </label>
+            <Select name="is_required" defaultValue={editing?.is_required ? "1" : "0"} disabled={loading}>
+              <SelectTrigger id="is_required" className="w-full">
+                <SelectValue placeholder="Pilih status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">Wajib diisi</SelectItem>
+                <SelectItem value="0">Opsional</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <InputField
+            id="order"
+            name="order"
+            label="Urutan"
+            type="number"
+            min={1}
+            defaultValue={editing?.order ?? fields.length + 1}
+            required
+            disabled={loading}
+          />
+          <InputField
+            id="placeholder"
             name="placeholder"
+            label="Placeholder"
             defaultValue={editing?.placeholder ?? ""}
-            className="field"
             placeholder="Placeholder (opsional)"
             disabled={loading}
           />
-          <textarea
-            name="options"
-            defaultValue={Array.isArray(editing?.options) ? editing?.options.map((opt) => String(opt)).join("\n") : ""}
-            className="field min-h-24"
-            placeholder="Opsi per baris (untuk select/radio)"
-            disabled={loading}
-          />
+          <div className="space-y-2">
+            <label htmlFor="options" className="block text-sm font-medium text-slate-700">
+              Opsi per baris (untuk select/radio)
+            </label>
+            <textarea
+              id="options"
+              name="options"
+              defaultValue={Array.isArray(editing?.options) ? editing?.options.map((opt) => String(opt)).join("\n") : ""}
+              className="field min-h-24 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary/50"
+              placeholder="Opsi per baris (untuk select/radio)"
+              disabled={loading}
+            />
+          </div>
           {error && <ErrorBanner message={error} />}
-          <button className="btn-primary w-full rounded-lg px-4 py-2 font-semibold" type="submit" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Menyimpan..." : "Simpan"}
-          </button>
+          </Button>
         </form>
       </Modal>
 

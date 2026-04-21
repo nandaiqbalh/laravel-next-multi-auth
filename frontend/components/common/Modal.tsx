@@ -40,7 +40,9 @@ export function Modal({
             ×
           </button>
         </div>
-        {children}
+        <div className="max-h-[75vh] overflow-y-auto pr-1">
+          {children}
+        </div>
       </div>
     </div>
   );
