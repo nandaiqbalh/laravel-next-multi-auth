@@ -10,13 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { AuthLayout } from "@/components/auth/auth-layout";
-
-function resolveDashboardHref(role?: string): string {
-  if (role === "SUPERADMIN") return "/superadmin/dashboard";
-  if (role === "ADMIN_LAYANAN") return "/admin/services";
-  if (role === "UMKM_ADMIN") return "/admin/dashboard";
-  return "/user/dashboard";
-}
+import { resolveRoleHomePath } from "@/features/umkm/utils/roleRouting";
 
 const FEATURES = [
   { text: "Ajukan berbagai macam permohonan digital" },
@@ -47,8 +41,16 @@ export default function LoginClient() {
     }
 
     const session = await getSession();
-    router.push(resolveDashboardHref(session?.user?.role));
-    router.refresh();
+    const targetHref = resolveRoleHomePath(session?.user?.roleSlug, session?.user?.role);
+
+    try {
+      router.push(targetHref);
+      router.refresh();
+    } catch {
+      window.location.assign(targetHref);
+    }
+
+    setLoading(false);
   }
 
   return (

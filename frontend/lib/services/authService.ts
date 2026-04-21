@@ -25,6 +25,8 @@ export const authService = {
       email: response.data.user.email,
       role: response.data.user.role?.name ?? "UMKM_USER",
       roleSlug: response.data.user.role?.slug ?? "umkm-user",
+      rolePerangkatDaerahId: response.data.user.role?.perangkat_daerah_id ?? null,
+      rolePerangkatDaerahName: response.data.user.role?.perangkat_daerah?.name ?? null,
       token: response.data.token,
     };
   },

@@ -22,18 +22,23 @@ class AuthService
      */
     public function register(array $payload): array
     {
-        if (empty($payload['role_id'])) {
-            $payload['role_id'] = Role::query()->where('slug', 'umkm-user')->value('id')
-                ?? Role::query()->where('name', 'UMKM_USER')->value('id');
+        $defaultRole = Role::query()
+            ->where('slug', 'user')
+            ->orWhere('name', 'USER')
+            ->first();
 
-            if (! $payload['role_id']) {
-                throw new RuntimeException('Default UMKM role not found');
-            }
+        if (! $defaultRole) {
+            $defaultRole = Role::query()->create([
+                'name' => 'USER',
+                'slug' => 'user',
+                'perangkat_daerah_id' => null,
+            ]);
         }
 
+        $payload['role_id'] = $defaultRole->id;
         $payload['password'] = Hash::make($payload['password']);
         $user = $this->userRepository->create($payload);
-        $user->load('role');
+        $user->load('role.perangkatDaerah');
         $token = $user->createToken('api-token')->plainTextToken;
 
         return [
@@ -48,6 +53,7 @@ class AuthService
     public function login(array $payload): array
     {
         $user = $this->userRepository->findByNik($payload['nik']);
+        $user?->load('role.perangkatDaerah');
 
         if (! $user || ! Hash::check($payload['password'], $user->password)) {
             throw new AuthenticationException('Invalid credentials');

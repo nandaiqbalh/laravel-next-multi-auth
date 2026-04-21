@@ -7,6 +7,8 @@ declare module "next-auth" {
     nik: string;
     role: string;
     roleSlug: string;
+    rolePerangkatDaerahId?: number | null;
+    rolePerangkatDaerahName?: string | null;
     token: string;
   }
 
@@ -18,6 +20,8 @@ declare module "next-auth" {
       email: string;
       role: string;
       roleSlug: string;
+      rolePerangkatDaerahId?: number | null;
+      rolePerangkatDaerahName?: string | null;
     };
     token: string;
   }

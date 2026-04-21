@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/ui/page-header";
 import { AdminClaimValidationClient } from "@/components/features/umkm/AdminClaimValidationClient";
 import { umkmService } from "@/features/umkm/services/umkmService";
+import { isPerinkopAdminRole, resolveRoleHomePath } from "@/features/umkm/utils/roleRouting";
 
 export const metadata = {
   title: 'Validasi Profil Pelaku Usaha',
@@ -17,6 +18,10 @@ export default async function AdminValidasiProfilPage() {
 
   if (!session?.token) {
     redirect("/login");
+  }
+
+  if (!isPerinkopAdminRole(session.user.roleSlug, session.user.role)) {
+    redirect(resolveRoleHomePath(session.user.roleSlug, session.user.role));
   }
 
   const data = await umkmService.getAdminClaims(session.token);

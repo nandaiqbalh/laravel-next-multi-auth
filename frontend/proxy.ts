@@ -8,6 +8,13 @@ import { resolveRoleHomePath, resolveRoleScope } from "@/features/umkm/utils/rol
 export default auth((req: any) => {
   const isLoggedIn = !!req.auth;
   const pathname = req.nextUrl.pathname;
+  const safeRedirectToHome = (homePath: string) => {
+    if (homePath === pathname) {
+      return NextResponse.next();
+    }
+
+    return NextResponse.redirect(new URL(homePath, req.url));
+  };
 
   if (pathname.startsWith("/umkm-admin")) {
     return NextResponse.redirect(new URL(pathname.replace("/umkm-admin", "/admin"), req.url));
@@ -42,15 +49,15 @@ export default auth((req: any) => {
   }
 
   if (isSuperadminArea && roleScope !== "superadmin") {
-    return NextResponse.redirect(new URL(homePath, req.url));
+    return safeRedirectToHome(homePath);
   }
 
   if (isAdminArea && roleScope !== "admin" && roleScope !== "superadmin") {
-    return NextResponse.redirect(new URL(homePath, req.url));
+    return safeRedirectToHome(homePath);
   }
 
   if (isUserArea && roleScope !== "user") {
-    return NextResponse.redirect(new URL(homePath, req.url));
+    return safeRedirectToHome(homePath);
   }
 
   return NextResponse.next();

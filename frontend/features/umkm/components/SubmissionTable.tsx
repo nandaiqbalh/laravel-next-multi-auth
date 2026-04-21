@@ -17,6 +17,7 @@ export function SubmissionTable({ submissions }: { submissions: SubmissionItem[]
         <TableRow>
           <TableHead>ID</TableHead>
           <TableHead>Layanan</TableHead>
+          <TableHead>Perangkat Daerah</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Dokumen</TableHead>
           <TableHead>Catatan Admin</TableHead>
@@ -27,6 +28,10 @@ export function SubmissionTable({ submissions }: { submissions: SubmissionItem[]
           <TableRow key={item.id}>
             <TableCell>#{item.id}</TableCell>
             <TableCell>{item.service?.name ?? `Service #${item.service_id}`}</TableCell>
+            <TableCell>
+              {item.service?.perangkat_daerah?.name ??
+                (item.service?.perangkat_daerah_id ? `PD #${item.service.perangkat_daerah_id}` : "-")}
+            </TableCell>
             <TableCell>
               <SubmissionStatusBadge status={item.status} />
             </TableCell>

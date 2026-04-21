@@ -29,7 +29,21 @@ export const authRepository = {
    */
   async login(payload: LoginPayload) {
     try {
-      const response = await httpClient.post<ApiResponse<{ user: User & { role: { name: string } }; token: string }>>("/login", payload);
+      const response = await httpClient.post<ApiResponse<{
+        user: User & {
+          role: {
+            name: string;
+            slug: string;
+            perangkat_daerah_id?: number | null;
+            perangkat_daerah?: {
+              id: number;
+              name: string;
+              slug: string;
+            } | null;
+          };
+        };
+        token: string;
+      }>>("/login", payload);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

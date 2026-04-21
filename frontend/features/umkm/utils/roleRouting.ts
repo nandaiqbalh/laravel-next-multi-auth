@@ -27,7 +27,11 @@ export function normalizeRoleSlug(roleSlug?: string | null, roleName?: string | 
     return "";
   }
 
-  return roleName.trim().toLowerCase().replace(/_/g, "-");
+  return roleName.trim().toLowerCase().replace(/[_\s]+/g, "-");
+}
+
+export function isPerinkopAdminRole(roleSlug?: string | null, roleName?: string | null): boolean {
+  return normalizeRoleSlug(roleSlug, roleName) === "admin-dinkop";
 }
 
 export function resolveRoleScope(roleSlug?: string | null, roleName?: string | null): RoleScope {
@@ -46,6 +50,23 @@ export function resolveRoleScope(roleSlug?: string | null, roleName?: string | n
 
 export function resolveRoleHomePath(roleSlug?: string | null, roleName?: string | null): string {
   const normalizedSlug = normalizeRoleSlug(roleSlug, roleName);
+  const roleScope = resolveRoleScope(roleSlug, roleName);
 
-  return ROLE_HOME_BY_SLUG[normalizedSlug] ?? (roleName ? ROLE_HOME_BY_NAME[roleName] : undefined) ?? "/user/dashboard";
+  if (ROLE_HOME_BY_SLUG[normalizedSlug]) {
+    return ROLE_HOME_BY_SLUG[normalizedSlug];
+  }
+
+  if (roleName && ROLE_HOME_BY_NAME[roleName]) {
+    return ROLE_HOME_BY_NAME[roleName];
+  }
+
+  if (roleScope === "superadmin") {
+    return "/superadmin/dashboard";
+  }
+
+  if (roleScope === "admin") {
+    return normalizedSlug === "admin-layanan" ? "/admin/services" : "/admin/dashboard";
+  }
+
+  return "/user/dashboard";
 }

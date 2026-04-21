@@ -43,7 +43,10 @@ class PublicCatalogService
     public function activeServicesBySlug(string $slug): array
     {
         return Cache::remember("public.perangkat-daerah.{$slug}.services", now()->addMinutes(10), function () use ($slug) {
-            return $this->serviceCatalogRepository->listActiveByPerangkatSlug($slug)->all();
+            return $this->serviceCatalogRepository
+                ->listActiveByPerangkatSlug($slug)
+                ->map(fn ($item) => $item->toArray())
+                ->all();
         });
     }
 
@@ -53,7 +56,10 @@ class PublicCatalogService
     public function formFieldsByService(int $serviceId): array
     {
         return Cache::remember("public.services.{$serviceId}.fields", now()->addMinutes(10), function () use ($serviceId) {
-            return $this->serviceFormFieldRepository->listByServiceId($serviceId)->all();
+            return $this->serviceFormFieldRepository
+                ->listByServiceId($serviceId)
+                ->map(fn ($item) => $item->toArray())
+                ->all();
         });
     }
 }

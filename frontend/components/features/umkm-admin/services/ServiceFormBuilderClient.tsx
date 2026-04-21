@@ -13,6 +13,7 @@ import {
   updateServiceFormFieldAction,
 } from "@/lib/actions/serviceManagementActions";
 import { ServiceFormField } from "@/lib/types";
+import { Button } from "@/components/ui/button";
 
 const FIELD_TYPE_OPTIONS = ["text", "textarea", "select", "number", "date", "file", "radio", "checkbox", "email", "tel"];
 
@@ -136,9 +137,8 @@ export function ServiceFormBuilderClient({
     <section className="space-y-4">
       <div className="surface-panel p-4 md:p-6">
         <div className="mb-4 flex justify-end">
-          <button
+          <Button
             type="button"
-            className="btn-primary rounded-lg px-4 py-2 text-sm font-semibold"
             onClick={() => {
               setEditing(null);
               setError("");
@@ -147,7 +147,7 @@ export function ServiceFormBuilderClient({
             disabled={loading}
           >
             Tambah Field
-          </button>
+          </Button>
         </div>
 
         <DataTable

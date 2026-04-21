@@ -16,7 +16,7 @@ import {
 import { AppShell } from "@/components/layout/app-shell";
 import { type SidebarNavItem } from "@/components/layout/sidebar";
 import type { RoleName } from "@/features/umkm/types/umkm";
-import { normalizeRoleSlug, resolveRoleScope } from "@/features/umkm/utils/roleRouting";
+import { isPerinkopAdminRole, normalizeRoleSlug, resolveRoleScope } from "@/features/umkm/utils/roleRouting";
 
 /**
  * PortalShell wraps protected portal pages with role-aware navigation.
@@ -43,16 +43,22 @@ export function PortalShell({
   children: React.ReactNode;
 }) {
   const menuForUser: SidebarNavItem[] = [
-      { href: "/user/dashboard", label: "Dashboard", icon: ChartLine },
-      { href: "/user/profil-umkm", label: "Profil Usaha", icon: Buildings },
-      { href: "/user/pengajuan", label: "Pengajuan", icon: ClipboardText },
-    ];
+    { href: "/user/dashboard", label: "Dashboard", icon: ChartLine },
+    {
+      label: "Profil",
+      icon: IdentificationCard,
+      children: [
+        { href: "/user/profil-umkm", label: "Profil Usaha", icon: Buildings },
+      ],
+    },
+    { href: "/user/pengajuan", label: "Pengajuan", icon: ClipboardText },
+  ];
 
   const menuForAdmin: SidebarNavItem[] = [
       { href: "/admin/dashboard", label: "Dashboard", icon: ChartLine },
       { href: "/admin/services", label: "Layanan", icon: AddressBook },
       {
-        label: "Profil",
+        label: "Validasi",
         icon: Buildings,
         children: [
           { href: "/admin/validasi-profil", label: "Validasi Profil", icon: IdentificationCard },
@@ -77,11 +83,11 @@ export function PortalShell({
         label: "Manajemen Akses",
         icon: ShieldCheck,
         children: [
+          { href: "/superadmin/perangkat-daerah", label: "Perangkat Daerah", icon: Buildings },
           { href: "/superadmin/roles", label: "Roles", icon: ShieldStar },
           { href: "/superadmin/users", label: "Users", icon: User },
         ],
       },
-      { href: "/superadmin/perangkat-daerah", label: "Perangkat Daerah", icon: Buildings },
       { href: "/superadmin/audit-trail", label: "Audit Trail", icon: IdentificationCard },
     ];
 
@@ -99,13 +105,24 @@ export function PortalShell({
 
   const normalizedRoleSlug = normalizeRoleSlug(roleSlug, role);
   const roleScope = resolveRoleScope(normalizedRoleSlug, role);
+  const isPerinkopAdmin = isPerinkopAdminRole(roleSlug, role);
   const items =
     normalizedRoleSlug === "admin-layanan"
       ? menuForAdminLayanan
       : roleScope === "superadmin"
         ? menuForSuperadmin
         : roleScope === "admin"
-          ? menuForAdmin
+          ? menuForAdmin.filter((item) => {
+              if (item.href === "/admin/data-umkm") {
+                return isPerinkopAdmin;
+              }
+
+              if (item.label === "Validasi") {
+                return isPerinkopAdmin;
+              }
+
+              return true;
+            })
           : menuForUser;
 
   return (

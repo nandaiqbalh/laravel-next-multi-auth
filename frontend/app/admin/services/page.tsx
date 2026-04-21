@@ -1,6 +1,7 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/ui/page-header";
 import { ServicesClient } from "@/components/features/umkm-admin/services/ServicesClient";
-import { getPublicPerangkatDaerahAction } from "@/lib/actions/perangkatDaerahActions";
 import { getManagedServicesAction } from "@/lib/actions/serviceManagementActions";
 
 export const metadata = {
@@ -9,10 +10,15 @@ export const metadata = {
 };
 
 export default async function AdminServicesPage() {
-  const [servicesResponse, perangkatResponse] = await Promise.all([
-    getManagedServicesAction(1, ""),
-    getPublicPerangkatDaerahAction(),
-  ]);
+  const session = await auth();
+
+  if (!session?.token) {
+    redirect("/login");
+  }
+
+  const currentPerangkatDaerahId = session.user.rolePerangkatDaerahId ?? undefined;
+
+  const servicesResponse = await getManagedServicesAction(1, "", currentPerangkatDaerahId);
 
   return (
     <div className="space-y-4">
@@ -20,7 +26,11 @@ export default async function AdminServicesPage() {
         title="Layanan"
         description="Kelola layanan yang akan ditampilkan pada halaman publik dan pengajuan pengguna."
       />
-      <ServicesClient initialData={servicesResponse.data} perangkatDaerahOptions={perangkatResponse.data} />
+      <ServicesClient
+        initialData={servicesResponse.data}
+        currentPerangkatDaerahId={currentPerangkatDaerahId}
+        currentPerangkatDaerahName={session.user.rolePerangkatDaerahName ?? undefined}
+      />
     </div>
   );
 }

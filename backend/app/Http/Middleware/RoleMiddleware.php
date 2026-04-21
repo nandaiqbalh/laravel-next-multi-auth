@@ -22,7 +22,14 @@ class RoleMiddleware
             $user?->load('role');
         }
 
-        if (! $user || ! $user->role || ! in_array($user->role->name, $roleNames, true)) {
+        $roleName = $user->role->name;
+        $roleSlug = $user->role->slug;
+        $hasRole = in_array($roleName, $roleNames, true)
+            || ($roleSlug && in_array($roleSlug, $roleNames, true))
+            || $this->matchesDynamicAdminRole($roleName, $roleSlug, $roleNames)
+            || $this->matchesDynamicUserRole($roleName, $roleSlug, $roleNames);
+
+        if (! $user || ! $user->role || ! $hasRole) {
             return response()->json([
                 'error' => true,
                 'message' => 'Forbidden access for current role',
@@ -31,5 +38,41 @@ class RoleMiddleware
         }
 
         return $next($request);
+    }
+
+    private function matchesDynamicAdminRole(string $roleName, ?string $roleSlug, array $roleNames): bool
+    {
+        foreach ($roleNames as $allowedRole) {
+            if (in_array($allowedRole, ['UMKM_ADMIN', 'ADMIN_LAYANAN'], true)) {
+                $normalizedSlug = strtolower((string) $roleSlug);
+                $normalizedName = strtolower($roleName);
+
+                if (str_starts_with($normalizedSlug, 'admin-') || str_contains($normalizedName, 'admin')) {
+                    return true;
+                }
+            }
+
+            if ($allowedRole === 'SUPERADMIN' && $roleSlug && str_starts_with(strtolower($roleSlug), 'superadmin')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function matchesDynamicUserRole(string $roleName, ?string $roleSlug, array $roleNames): bool
+    {
+        foreach ($roleNames as $allowedRole) {
+            if ($allowedRole === 'UMKM_USER') {
+                $normalizedSlug = strtolower((string) $roleSlug);
+                $normalizedName = strtolower($roleName);
+
+                if ($normalizedSlug === 'user' || $normalizedName === 'user') {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -24,6 +24,18 @@ class ServiceManagementService
      */
     public function list(int $perPage = 20, ?string $search = null, ?int $perangkatDaerahId = null): array
     {
+        if ($perangkatDaerahId === null) {
+            $user = Auth::user();
+
+            if ($user && ! $user->relationLoaded('role')) {
+                $user->load('role');
+            }
+
+            if ($user?->role?->perangkat_daerah_id) {
+                $perangkatDaerahId = $user->role->perangkat_daerah_id;
+            }
+        }
+
         $services = $this->serviceCatalogRepository->paginateForAdmin($perPage, $search, $perangkatDaerahId);
 
         return [

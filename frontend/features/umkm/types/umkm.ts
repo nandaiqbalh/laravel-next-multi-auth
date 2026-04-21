@@ -133,6 +133,11 @@ export type ServiceItem = {
   code: string;
   name: string;
   perangkat_daerah_id?: number | null;
+  perangkat_daerah?: {
+    id: number;
+    name: string;
+    slug: string;
+  } | null;
   is_active?: boolean;
 };
 

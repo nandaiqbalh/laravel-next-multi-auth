@@ -17,6 +17,7 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
   actions,
+  icon,
 }: {
   open: boolean;
   title: string;
@@ -27,12 +28,19 @@ export function ConfirmDialog({
   onConfirm: () => void;
   onCancel: () => void;
   actions?: ReactNode;
+  icon?: ReactNode;
 }) {
   return (
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onCancel()}>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
+
           <DialogTitle>{title}</DialogTitle>
+          {icon ? (
+            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+              {icon}
+            </div>
+          ) : null}
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 

@@ -17,6 +17,9 @@ import {
 } from "@/lib/actions/perangkatDaerahActions";
 import { PaginatedData, PerangkatDaerah } from "@/lib/types";
 import { useDebounce } from "@/lib/services/useDebounce";
+import { InputField } from "@/components/common/InputField";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export function PerangkatDaerahClient({ initialData }: { initialData: PaginatedData<PerangkatDaerah> }) {
   const [data, setData] = useState(initialData);
@@ -104,9 +107,8 @@ export function PerangkatDaerahClient({ initialData }: { initialData: PaginatedD
     <section className="space-y-4">
       <div className="surface-panel p-4 md:p-6">
         <div className="mb-4 flex justify-end">
-          <button
+          <Button
             type="button"
-            className="btn-primary rounded-lg px-4 py-2 text-sm font-semibold"
             onClick={() => {
               setEditing(null);
               setError("");
@@ -115,7 +117,7 @@ export function PerangkatDaerahClient({ initialData }: { initialData: PaginatedD
             disabled={loading}
           >
             Tambah Perangkat Daerah
-          </button>
+          </Button>
         </div>
 
         <SearchInput
@@ -141,26 +143,28 @@ export function PerangkatDaerahClient({ initialData }: { initialData: PaginatedD
                 item.slug,
                 item.description ?? "-",
                 <div key={item.id} className="flex gap-2">
-                  <button
+                  <Button
                     type="button"
-                    className="rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
+                    size="sm"
+                    className="h-8 px-3"
                     onClick={() => {
                       setEditing(item);
-                      setError("");
                       setModalOpen(true);
                     }}
                     disabled={loading}
                   >
                     Edit
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
-                    className="rounded-lg bg-red-600 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
+                    variant="destructive"
+                    size="sm"
+                    className="h-8 px-3"
                     onClick={() => setDeletingId(item.id)}
                     disabled={loading}
                   >
                     Delete
-                  </button>
+                  </Button>
                 </div>,
               ])}
               emptyLabel="Belum ada data perangkat daerah"
@@ -178,32 +182,40 @@ export function PerangkatDaerahClient({ initialData }: { initialData: PaginatedD
         title={editing ? "Edit Perangkat Daerah" : "Tambah Perangkat Daerah"}
       >
         <form onSubmit={onSubmit} className="space-y-3">
-          <input
+          <InputField
+            id="perangkat-daerah-name"
+            label="Nama Perangkat Daerah"
             name="name"
             defaultValue={editing?.name ?? ""}
-            className="field"
             placeholder="Nama perangkat daerah"
             required
             disabled={loading}
           />
-          <input
+          
+          <InputField
+            id="perangkat-daerah-slug"
+            label="Slug"
             name="slug"
             defaultValue={editing?.slug ?? ""}
-            className="field"
             placeholder="Slug (opsional, auto-generate jika kosong)"
             disabled={loading}
           />
-          <textarea
-            name="description"
-            defaultValue={editing?.description ?? ""}
-            className="field min-h-24"
-            placeholder="Deskripsi (opsional)"
-            disabled={loading}
-          />
+
+          <div className="space-y-1.5">
+            <Label>Deskripsi</Label>
+            <textarea
+              name="description"
+              defaultValue={editing?.description ?? ""}
+              className="field min-h-24 bg-white"
+              placeholder="Deskripsi (opsional)"
+              disabled={loading}
+            />
+          </div>
+
           {error && <ErrorBanner message={error} />}
-          <button className="btn-primary w-full rounded-lg px-4 py-2 font-semibold" type="submit" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Menyimpan..." : "Simpan"}
-          </button>
+          </Button>
         </form>
       </Modal>
 

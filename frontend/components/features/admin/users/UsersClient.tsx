@@ -20,6 +20,9 @@ import { createUserSchema, editUserSchema } from "@/validations/user.schema.vali
 import { useDebounce } from "@/lib/services/useDebounce";
 import { PaginatedData, Role, User } from "@/lib/types";
 import { FormEvent, useEffect, useState, useTransition } from "react";
+import { Button } from "@/components/ui/button";
+import { InputField } from "@/components/common/InputField";
+import { Label } from "@/components/ui/label";
 
 /**
  * Users client component handles table interactions and CRUD modals.
@@ -165,14 +168,14 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
     <section className="space-y-4">
       <div className="surface-panel p-4 md:p-6">
         <div className="mb-4 flex justify-end">
-          <button
+          <Button
             type="button"
             onClick={openCreateModal}
+
             disabled={loading}
-            className="btn-primary rounded-lg px-4 py-2 text-sm font-semibold"
           >
             Tambah User
-          </button>
+          </Button>
         </div>
 
         <SearchInput
@@ -200,22 +203,28 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
                 item.email,
                 item.role?.name ?? "-",
                 <div key={item.id} className="flex gap-2">
-                  <button
+                  <Button
                     type="button"
-                    className="rounded-lg bg-[var(--primary)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--primary-dark)]"
-                    onClick={() => openEditModal(item)}
+                    size="sm"
+                    className="h-8 px-3"
+                    onClick={() => {
+                      setEditing(item);
+                      setModalOpen(true);
+                    }}
                     disabled={loading}
                   >
                     Edit
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
-                    className="rounded-lg bg-red-600 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
+                    variant="destructive"
+                    size="sm"
+                    className="h-8 px-3"
                     onClick={() => setDeletingId(item.id)}
                     disabled={loading}
                   >
                     Delete
-                  </button>
+                  </Button>
                 </div>,
               ])}
               emptyLabel="Belum ada data user"
@@ -233,17 +242,50 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
         title={editing ? "Edit User" : "Tambah User"}
       >
         <form onSubmit={onSubmit} className="space-y-3">
-            <input name="nik" defaultValue={editing?.nik ?? ""} className="field" placeholder="NIK" required disabled={loading} />
-            <input name="name" defaultValue={editing?.name ?? ""} className="field" placeholder="Nama" required disabled={loading} />
-            <input name="email" defaultValue={editing?.email ?? ""} className="field" placeholder="Email" type="email" required disabled={loading} />
-            <input
-              name="password"
-              type="password"
-              className="field"
-              placeholder={editing ? "Password baru (opsional)" : "Password"}
-              required={!editing}
-              disabled={loading}
-            />
+
+          <InputField
+            id="nik"
+            label="NIK"
+            name="nik"
+            defaultValue={editing?.nik ?? ""}
+            placeholder="NIK"
+            required
+            disabled={loading}
+          />
+
+          <InputField
+            id="name"
+            label="Nama"
+            name="name"
+            defaultValue={editing?.name ?? ""}
+            placeholder="Nama"
+            required
+            disabled={loading}
+          />
+
+          <InputField
+            id="email"
+            label="Email"
+            name="email"
+            type="email"
+            defaultValue={editing?.email ?? ""}
+            placeholder="Email"
+            required
+            disabled={loading}
+          />
+
+          <InputField
+            id="password"
+            label="Password"
+            name="password"
+            type="password"
+            placeholder={editing ? "Password baru (opsional)" : "Password"}
+            required={!editing}
+            disabled={loading}
+          />
+
+          <div className="space-y-1.5">
+            <Label>Role</Label>
             <Select name="role_id" defaultValue={String(editing?.role_id ?? roles[0]?.id)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Pilih role" />
@@ -256,10 +298,17 @@ export function UsersClient({ initialData, roles }: { initialData: PaginatedData
                 ))}
               </SelectContent>
             </Select>
-            {error && <ErrorBanner message={error} />}
-          <button className="btn-primary w-full rounded-lg px-4 py-2 font-semibold" type="submit" disabled={loading}>
+          </div>
+
+          {error && <ErrorBanner message={error} />}
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+          >
             {loading ? "Menyimpan..." : "Simpan"}
-          </button>
+          </Button>
         </form>
       </Modal>
 
