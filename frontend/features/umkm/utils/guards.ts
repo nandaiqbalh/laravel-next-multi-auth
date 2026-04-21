@@ -25,10 +25,10 @@ export async function requireRole(allowed: RoleName[]) {
     }
 
     if (currentRole === "UMKM_ADMIN") {
-      redirect("/admin/umkm/dashboard");
+      redirect("/umkm-admin/dashboard");
     }
 
-    redirect("/user-umkm/dashboard");
+    redirect("/umkm-user/dashboard");
   }
 
   return {

@@ -16,8 +16,8 @@ export default async function HomePage() {
     session?.user.role === "SUPERADMIN"
       ? "/superadmin/dashboard"
       : session?.user.role === "UMKM_ADMIN"
-        ? "/admin/umkm/dashboard"
-        : "/user-umkm/dashboard";
+        ? "/umkm-admin/dashboard"
+        : "/umkm-user/dashboard";
 
   return (
     <main className="min-h-screen">

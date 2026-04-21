@@ -15,10 +15,10 @@ export default async function SuperadminLayout({ children }: { children: ReactNo
 
   if (session.user.role !== "SUPERADMIN") {
     if (session.user.role === "UMKM_ADMIN") {
-      redirect("/admin/umkm/dashboard");
+      redirect("/umkm-admin/dashboard");
     }
 
-    redirect("/user-umkm/dashboard");
+    redirect("/umkm-user/dashboard");
   }
 
   return (

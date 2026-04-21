@@ -34,9 +34,9 @@ export async function saveUmkmProfileAction(payload: Partial<UmkmProfile>) {
   const token = await getTokenOrThrow();
   const profile = await umkmService.saveMyProfile(token, payload);
 
-  revalidatePath("/user-umkm/profil-umkm");
-  revalidatePath("/user-umkm/dashboard");
-  revalidatePath("/admin/umkm/data-umkm");
+  revalidatePath("/umkm-user/profil-umkm");
+  revalidatePath("/umkm-user/dashboard");
+  revalidatePath("/umkm-admin/data-umkm");
 
   return profile;
 }
@@ -52,9 +52,9 @@ export async function submitUmkmClaimAction() {
   const token = await getTokenOrThrow();
   const claim = await umkmService.submitClaim(token);
 
-  revalidatePath("/user-umkm/dashboard");
-  revalidatePath("/user-umkm/profil-umkm");
-  revalidatePath("/admin/umkm/pengajuan");
+  revalidatePath("/umkm-user/dashboard");
+  revalidatePath("/umkm-user/profil-umkm");
+  revalidatePath("/umkm-admin/pengajuan");
 
   return claim;
 }
@@ -71,9 +71,9 @@ export async function createSubmissionAction(payload: { service_id: number; docu
   const token = await getTokenOrThrow();
   const submission = await umkmService.createSubmission(token, payload);
 
-  revalidatePath("/user-umkm/pengajuan");
-  revalidatePath("/admin/umkm/pengajuan");
-  revalidatePath("/admin/umkm/rekap");
+  revalidatePath("/umkm-user/pengajuan");
+  revalidatePath("/umkm-admin/pengajuan");
+  revalidatePath("/umkm-admin/rekap");
 
   return submission;
 }
@@ -94,9 +94,9 @@ export async function processClaimAction(
   const token = await getTokenOrThrow();
   const claim = await umkmService.processClaim(token, claimId, payload);
 
-  revalidatePath("/admin/umkm/pengajuan");
-  revalidatePath("/admin/umkm/data-umkm");
-  revalidatePath("/user-umkm/profil-umkm");
+  revalidatePath("/umkm-admin/pengajuan");
+  revalidatePath("/umkm-admin/data-umkm");
+  revalidatePath("/umkm-user/profil-umkm");
 
   return claim;
 }
@@ -117,9 +117,9 @@ export async function processSubmissionAction(
   const token = await getTokenOrThrow();
   const submission = await umkmService.processSubmission(token, submissionId, payload);
 
-  revalidatePath("/admin/umkm/pengajuan");
-  revalidatePath("/admin/umkm/rekap");
-  revalidatePath("/user-umkm/pengajuan");
+  revalidatePath("/umkm-admin/pengajuan");
+  revalidatePath("/umkm-admin/rekap");
+  revalidatePath("/umkm-user/pengajuan");
 
   return submission;
 }

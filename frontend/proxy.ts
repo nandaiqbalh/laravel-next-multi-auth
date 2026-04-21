@@ -8,8 +8,8 @@ export default auth((req: any) => {
   const isLoggedIn = !!req.auth;
   const pathname = req.nextUrl.pathname;
   const role = req.auth?.user?.role;
-  const isUserArea = pathname === "/dashboard" || pathname.startsWith("/user-umkm") || pathname.startsWith("/profil-umkm") || pathname.startsWith("/pengajuan");
-  const isAdminArea = pathname.startsWith("/admin/umkm");
+  const isUserArea = pathname === "/dashboard" || pathname.startsWith("/umkm-user") || pathname.startsWith("/profil-umkm") || pathname.startsWith("/pengajuan");
+  const isAdminArea = pathname.startsWith("/umkm-admin");
   const isSuperadminArea = pathname.startsWith("/superadmin");
 
   if (!isLoggedIn && (isUserArea || isAdminArea || isSuperadminArea)) {
@@ -18,14 +18,14 @@ export default auth((req: any) => {
 
   if (isSuperadminArea && role !== "SUPERADMIN") {
     if (role === "UMKM_ADMIN") {
-      return NextResponse.redirect(new URL("/admin/umkm/dashboard", req.url));
+      return NextResponse.redirect(new URL("/umkm-admin/dashboard", req.url));
     }
 
-    return NextResponse.redirect(new URL("/user-umkm/dashboard", req.url));
+    return NextResponse.redirect(new URL("/umkm-user/dashboard", req.url));
   }
 
   if (isAdminArea && role !== "UMKM_ADMIN" && role !== "SUPERADMIN") {
-    return NextResponse.redirect(new URL("/user-umkm/dashboard", req.url));
+    return NextResponse.redirect(new URL("/umkm-user/dashboard", req.url));
   }
 
   if (isUserArea && role !== "UMKM_USER") {
@@ -33,12 +33,12 @@ export default auth((req: any) => {
       return NextResponse.redirect(new URL("/superadmin/dashboard", req.url));
     }
 
-    return NextResponse.redirect(new URL("/admin/umkm/dashboard", req.url));
+    return NextResponse.redirect(new URL("/umkm-admin/dashboard", req.url));
   }
 
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/admin/:path*", "/superadmin/:path*", "/dashboard", "/profil-umkm", "/pengajuan", "/user-umkm/:path*"],
+  matcher: ["/admin/:path*", "/superadmin/:path*", "/dashboard", "/profil-umkm", "/pengajuan", "/umkm-user/:path*"],
 };

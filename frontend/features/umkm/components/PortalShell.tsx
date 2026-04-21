@@ -41,28 +41,28 @@ export function PortalShell({
 }) {
   const menuByRole: Record<RoleName, SidebarNavItem[]> = {
     UMKM_USER: [
-      { href: "/user-umkm/dashboard", label: "Dashboard", icon: ChartLine },
-      { href: "/user-umkm/profil-umkm", label: "Profil UMKM", icon: Buildings },
-      { href: "/user-umkm/pengajuan", label: "Pengajuan", icon: ClipboardText },
+      { href: "/umkm-user/dashboard", label: "Dashboard", icon: ChartLine },
+      { href: "/umkm-user/profil-umkm", label: "Profil UMKM", icon: Buildings },
+      { href: "/umkm-user/pengajuan", label: "Pengajuan", icon: ClipboardText },
     ],
     UMKM_ADMIN: [
-      { href: "/admin/umkm/dashboard", label: "Dashboard", icon: ChartLine },
+      { href: "/umkm-admin/dashboard", label: "Dashboard", icon: ChartLine },
       {
         label: "Profil",
         icon: Buildings,
         children: [
-          { href: "/admin/umkm/validasi-profil", label: "Validasi Profil", icon: IdentificationCard },
-          { href: "/admin/umkm/data-umkm", label: "Data UMKM", icon: Buildings },
+          { href: "/umkm-admin/validasi-profil", label: "Validasi Profil", icon: IdentificationCard },
+          { href: "/umkm-admin/data-umkm", label: "Data UMKM", icon: Buildings },
         ],
       },
-      { href: "/admin/umkm/pengajuan", label: "Daftar Pengajuan", icon: ClipboardText },
-      { href: "/admin/umkm/rekap", label: "Rekap", icon: Stack },
+      { href: "/umkm-admin/pengajuan", label: "Daftar Pengajuan", icon: ClipboardText },
+      { href: "/umkm-admin/rekap", label: "Rekap", icon: Stack },
       {
         label: "Sistem",
         icon: ShieldCheck,
         children: [
-          { href: "/admin/umkm/user", label: "User", icon: Users },
-          { href: "/admin/umkm/audit-trail", label: "Audit Trail", icon: FileText },
+          { href: "/umkm-admin/user", label: "User", icon: Users },
+          { href: "/umkm-admin/audit-trail", label: "Audit Trail", icon: FileText },
         ],
       },
     ],

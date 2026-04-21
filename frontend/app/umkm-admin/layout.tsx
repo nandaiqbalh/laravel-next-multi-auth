@@ -18,7 +18,7 @@ export default async function AdminUmkmLayout({ children }: { children: ReactNod
   }
 
   if (session.user.role !== "UMKM_ADMIN") {
-    redirect("/user-umkm/dashboard");
+    redirect("/umkm-user/dashboard");
   }
 
   return (
