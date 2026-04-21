@@ -16,9 +16,10 @@ import {
   getRolesAction,
   updateRoleAction,
 } from "@/lib/actions/roleActions";
+import { getPerangkatDaerahAction } from "@/lib/actions/perangkatDaerahActions";
 import { roleSchema } from "@/validations/role.schema.validation";
 import { useDebounce } from "@/lib/services/useDebounce";
-import { PaginatedData, Role } from "@/lib/types";
+import { PaginatedData, PerangkatDaerah, Role } from "@/lib/types";
 import { FormEvent, useEffect, useState, useTransition } from "react";
 
 /**
@@ -34,6 +35,7 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Role | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [perangkatDaerahOptions, setPerangkatDaerahOptions] = useState<PerangkatDaerah[]>([]);
 
   useEffect(() => {
     startTransition(async () => {
@@ -46,6 +48,18 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
       }
     });
   }, [page, debouncedQuery]);
+
+  useEffect(() => {
+    startTransition(async () => {
+      try {
+        const response = await getPerangkatDaerahAction(1, "");
+        setPerangkatDaerahOptions(response.data.items);
+      } catch {
+        // Keep form usable even if perangkat daerah list fails to load.
+        setPerangkatDaerahOptions([]);
+      }
+    });
+  }, []);
 
   async function onDelete() {
     if (!deletingId) {
@@ -70,7 +84,12 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const values = { name: String(formData.get("name") ?? "") };
+    const perangkatDaerahRaw = String(formData.get("perangkat_daerah_id") ?? "").trim();
+    const values = {
+      name: String(formData.get("name") ?? ""),
+      slug: String(formData.get("slug") ?? ""),
+      perangkat_daerah_id: perangkatDaerahRaw.length > 0 ? Number(perangkatDaerahRaw) : null,
+    };
 
     try {
       const payload = roleSchema.parse(values);
@@ -140,9 +159,11 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
             </div>
           ) : (
             <DataTable
-              columns={["Nama", "Aksi"]}
+              columns={["Nama", "Slug", "Perangkat Daerah", "Aksi"]}
               rows={data.items.map((item) => [
                 item.name,
+                item.slug,
+                item.perangkat_daerah?.name ?? "Global",
                 <div key={item.id} className="flex gap-2">
                   <button
                     type="button"
@@ -189,6 +210,27 @@ export function RolesClient({ initialData }: { initialData: PaginatedData<Role> 
             required
             disabled={loading}
           />
+          <input
+            name="slug"
+            defaultValue={editing?.slug ?? ""}
+            className="field"
+            placeholder="Slug role, contoh: admin-dinkop"
+            required
+            disabled={loading}
+          />
+          <select
+            name="perangkat_daerah_id"
+            defaultValue={editing?.perangkat_daerah_id ? String(editing.perangkat_daerah_id) : ""}
+            className="field"
+            disabled={loading}
+          >
+            <option value="">Global (tidak terkait perangkat daerah)</option>
+            {perangkatDaerahOptions.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+          </select>
           {error && <ErrorBanner message={error} />}
           <button className="btn-primary w-full rounded-lg px-4 py-2 font-semibold" type="submit" disabled={loading}>
             {loading ? "Menyimpan..." : "Simpan"}

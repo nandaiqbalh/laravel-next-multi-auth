@@ -45,7 +45,7 @@ export function AdminSubmissionValidationClient({ initialData, token }: AdminSub
           setData(response);
           setError("");
         } catch {
-          setError("Gagal memuat daftar pengajuan layanan UMKM.");
+          setError("Gagal memuat daftar pengajuan layanan.");
         } finally {
           setLoading(false);
         }
@@ -80,7 +80,7 @@ export function AdminSubmissionValidationClient({ initialData, token }: AdminSub
                 <Badge key={`status-${submission.id}`}>{submission.status}</Badge>,
                 <AdminSubmissionActions key={`action-${submission.id}`} submissionId={submission.id} />,
               ])}
-              emptyLabel="Belum ada pengajuan layanan UMKM."
+              emptyLabel="Belum ada pengajuan layanan."
             />
             <Pagination currentPage={page} lastPage={data.meta.last_page} onChange={setPage} />
           </>

@@ -50,6 +50,8 @@ class RoleService
             (string) $role->id,
             [
                 'name' => $role->name,
+                'slug' => $role->slug,
+                'perangkat_daerah_id' => $role->perangkat_daerah_id,
             ],
         );
 
@@ -79,6 +81,8 @@ class RoleService
             (string) $updatedRole->id,
             [
                 'name' => $updatedRole->name,
+                'slug' => $updatedRole->slug,
+                'perangkat_daerah_id' => $updatedRole->perangkat_daerah_id,
             ],
         );
 
@@ -100,6 +104,8 @@ class RoleService
             (string) $role->id,
             [
                 'name' => $role->name,
+                'slug' => $role->slug,
+                'perangkat_daerah_id' => $role->perangkat_daerah_id,
             ],
         );
     }

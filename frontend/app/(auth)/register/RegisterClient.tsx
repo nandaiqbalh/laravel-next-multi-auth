@@ -14,8 +14,9 @@ import { AuthLayout } from "@/components/auth/auth-layout";
 
 function resolveDashboardHref(role?: string): string {
   if (role === "SUPERADMIN") return "/superadmin/dashboard";
-  if (role === "UMKM_ADMIN") return "/umkm-admin/dashboard";
-  return "/umkm-user/dashboard";
+  if (role === "ADMIN_LAYANAN") return "/admin/services";
+  if (role === "UMKM_ADMIN") return "/admin/dashboard";
+  return "/user/dashboard";
 }
 
 const FEATURES = [

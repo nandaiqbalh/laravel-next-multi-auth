@@ -34,11 +34,23 @@ class SubmissionRepository
     /**
      * Return paginated submissions for admin queue.
      */
-    public function paginateForAdmin(int $perPage = 20, ?string $status = null): LengthAwarePaginator
+    public function paginateForAdmin(int $perPage = 20, ?string $status = null, ?string $search = null): LengthAwarePaginator
     {
         return Submission::query()
-            ->with(['profile', 'service', 'processor'])
+            ->with(['profile', 'service.perangkatDaerah', 'processor'])
             ->when($status, fn ($query) => $query->where('status', $status))
+            ->when($search, function ($query) use ($search) {
+                $lowerSearch = strtolower($search);
+                $query->where(function ($searchQuery) use ($lowerSearch) {
+                    $searchQuery
+                        ->whereRaw('LOWER(umkm_profile_id::text) LIKE ?', ["%{$lowerSearch}%"])
+                        ->orWhereHas('service', function ($serviceQuery) use ($lowerSearch) {
+                            $serviceQuery
+                                ->whereRaw('LOWER(code) LIKE ?', ["%{$lowerSearch}%"])
+                                ->orWhereRaw('LOWER(name) LIKE ?', ["%{$lowerSearch}%"]);
+                        });
+                    });
+            })
             ->latest('created_at')
             ->paginate($perPage)
             ->withQueryString();

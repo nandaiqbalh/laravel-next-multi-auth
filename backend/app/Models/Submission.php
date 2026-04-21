@@ -18,6 +18,7 @@ class Submission extends Model
         'service_id',
         'status',
         'document_url',
+        'form_data',
         'catatan_admin',
         'processed_by',
         'submitted_at',
@@ -26,6 +27,7 @@ class Submission extends Model
     ];
 
     protected $casts = [
+        'form_data' => 'array',
         'submitted_at' => 'datetime',
         'processed_at' => 'datetime',
         'completed_at' => 'datetime',

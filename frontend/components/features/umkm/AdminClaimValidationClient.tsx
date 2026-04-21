@@ -45,7 +45,7 @@ export function AdminClaimValidationClient({ initialData, token }: AdminClaimVal
           setData(response);
           setError("");
         } catch {
-          setError("Gagal memuat validasi profil UMKM.");
+          setError("Gagal memuat validasi profil pelaku usaha.");
         } finally {
           setLoading(false);
         }

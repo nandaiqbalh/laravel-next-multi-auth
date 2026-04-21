@@ -1,10 +1,11 @@
 import { auth } from "@/auth";
 import Link from "next/link";
 import LayananAccordion from "./LayananAccordion";
+import { resolveRoleHomePath } from "@/features/umkm/utils/roleRouting";
 
 export const metadata = {
   title: 'Portal Layanan Digital Kabupaten Kulon Progo',
-  description: 'Akses layanan digital Pemerintah Kabupaten Kulon Progo untuk UMKM, perizinan, dan dukungan usaha.',
+  description: 'Akses layanan digital Pemerintah Kabupaten Kulon Progo untuk perizinan dan dukungan usaha.',
 };
 
 /**
@@ -12,12 +13,7 @@ export const metadata = {
  */
 export default async function HomePage() {
   const session = await auth();
-  const dashboardHref =
-    session?.user.role === "SUPERADMIN"
-      ? "/superadmin/dashboard"
-      : session?.user.role === "UMKM_ADMIN"
-        ? "/umkm-admin/dashboard"
-        : "/umkm-user/dashboard";
+  const dashboardHref = resolveRoleHomePath(session?.user.roleSlug, session?.user.role);
 
   return (
     <main className="min-h-screen">
@@ -66,7 +62,7 @@ export default async function HomePage() {
             Kabupaten Kulon Progo
           </h1>
           <p className="mt-5 text-base text-sky-100 sm:text-lg">
-            Akses layanan publik, perizinan, dukungan usaha, dan program pemberdayaan UMKM secara digital.
+            Akses layanan publik, perizinan, dukungan usaha, dan program pemberdayaan ekonomi secara digital.
           </p>
 
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
@@ -93,7 +89,7 @@ export default async function HomePage() {
           <p className="text-sm font-semibold uppercase tracking-[0.25em] text-sky-700">Layanan yang Tersedia</p>
           <h2 className="mt-4 text-3xl font-bold text-slate-900 sm:text-4xl">Layanan Tersedia Pemerintah Daerah</h2>
           <p className="mt-3 text-base leading-7 text-slate-600">
-            Pilih layanan digital yang tersedia untuk dukungan usaha, sertifikasi, dan peningkatan kapasitas pelaku UMKM di Kabupaten Kulon Progo.
+            Pilih layanan digital yang tersedia untuk dukungan usaha, sertifikasi, dan peningkatan kapasitas pelaku usaha di Kabupaten Kulon Progo.
           </p>
         </div>
 

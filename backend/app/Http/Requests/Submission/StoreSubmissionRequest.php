@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Submission;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * StoreSubmissionRequest validates UMKM service submission payload.
@@ -35,8 +36,13 @@ class StoreSubmissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'service_id' => ['required', 'integer', 'exists:services,id'],
-            'document_url' => ['required', 'url', 'max:2000'],
+            'service_id' => [
+                'required',
+                'integer',
+                Rule::exists('services', 'id')->where(fn ($query) => $query->where('is_active', true)),
+            ],
+            'document_url' => ['nullable', 'url', 'max:2000'],
+            'form_data' => ['nullable', 'array'],
         ];
     }
 }

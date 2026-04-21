@@ -39,7 +39,7 @@ export function AdminDataUmkmClient({ initialData, token }: AdminDataUmkmClientP
           setData(response);
           setError("");
         } catch {
-          setError("Gagal memuat data UMKM.");
+          setError("Gagal memuat data pelaku usaha.");
         } finally {
           setLoading(false);
         }
@@ -62,7 +62,7 @@ export function AdminDataUmkmClient({ initialData, token }: AdminDataUmkmClientP
                   setPage(1);
                 }
               }}
-              placeholder="Cari UMKM..."
+              placeholder="Cari pelaku usaha..."
             />
           </div>
         </div>
@@ -70,7 +70,7 @@ export function AdminDataUmkmClient({ initialData, token }: AdminDataUmkmClientP
         {loading ? (
           <div className="flex min-h-[220px] items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-600">
             <Spinner className="mr-2 h-5 w-5 text-slate-600" />
-            Memuat data UMKM...
+            Memuat data pelaku usaha...
           </div>
         ) : (
           <>
@@ -83,7 +83,7 @@ export function AdminDataUmkmClient({ initialData, token }: AdminDataUmkmClientP
                 item.nik_pengusaha,
                 item.is_verified ? <Badge>Verified</Badge> : <Badge variant="secondary">Pending</Badge>,
               ])}
-              emptyLabel="Tidak ada data UMKM yang cocok."
+              emptyLabel="Tidak ada data pelaku usaha yang cocok."
             />
             <Pagination currentPage={page} lastPage={data.meta.last_page} onChange={setPage} />
           </>

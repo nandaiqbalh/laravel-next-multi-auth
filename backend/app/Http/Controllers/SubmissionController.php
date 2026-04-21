@@ -100,9 +100,13 @@ class SubmissionController extends Controller
      */
     public function indexForAdmin()
     {
+        $status = request()->string('status')->toString() ?: null;
+        $search = request()->string('search')->toString() ?: null;
+
         $data = $this->submissionService->listForAdmin(
             perPage: (int) request()->integer('per_page', 20),
-            status: request()->string('status')->toString() ?: null,
+            status: $status,
+            search: $search,
         );
 
         return $this->successResponse('Queue pengajuan fetched', $data);

@@ -24,6 +24,8 @@ class StoreRoleRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:50', 'unique:roles,name'],
+            'slug' => ['nullable', 'string', 'max:120', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/', 'unique:roles,slug'],
+            'perangkat_daerah_id' => ['nullable', 'exists:perangkat_daerahs,id'],
         ];
     }
 }

@@ -1,7 +1,7 @@
 /**
  * RoleName defines RBAC roles from backend.
  */
-export type RoleName = "SUPERADMIN" | "UMKM_ADMIN" | "UMKM_USER";
+export type RoleName = "SUPERADMIN" | "UMKM_ADMIN" | "UMKM_USER" | "ADMIN_LAYANAN" | (string & {});
 
 /**
  * ApiEnvelope models standard Laravel API response.
@@ -36,6 +36,8 @@ export type PaginatedPayload<T> = {
 export type RoleItem = {
   id: number;
   name: RoleName;
+  slug?: string;
+  perangkat_daerah_id?: number | null;
 };
 
 /**
@@ -128,8 +130,10 @@ export type UmkmClaim = {
  */
 export type ServiceItem = {
   id: number;
-  code: "PIRT" | "NIB" | "KURASI" | "HALAL" | "QRIS" | "BBM";
+  code: string;
   name: string;
+  perangkat_daerah_id?: number | null;
+  is_active?: boolean;
 };
 
 /**
@@ -153,7 +157,8 @@ export type SubmissionItem = {
   umkm_profile_id: string;
   service_id: number;
   status: "diajukan" | "dalam_proses" | "revisi" | "selesai";
-  document_url: string;
+  document_url?: string | null;
+  form_data?: Record<string, unknown> | null;
   catatan_admin?: string | null;
   processed_by?: string | null;
   submitted_at?: string | null;

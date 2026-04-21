@@ -15,8 +15,13 @@ class RoleRepository
      */
     public function paginate(int $perPage = 20, ?string $search = null): LengthAwarePaginator
     {
+        $lowerSearch = strtolower((string) $search);
+
         return Role::query()
-            ->when($search, fn ($query) => $query->whereRaw('LOWER(name) LIKE ?', ["%" . strtolower($search) . "%"]))
+            ->with('perangkatDaerah')
+            ->when($search, fn ($query) => $query
+                ->whereRaw('LOWER(name) LIKE ?', ["%{$lowerSearch}%"])
+                ->orWhereRaw('LOWER(slug) LIKE ?', ["%{$lowerSearch}%"]))
             ->orderByDesc('id')
             ->paginate($perPage)
             ->withQueryString();
@@ -27,7 +32,7 @@ class RoleRepository
      */
     public function create(array $data): Role
     {
-        return Role::query()->create($data);
+        return Role::query()->create($data)->load('perangkatDaerah');
     }
 
     /**
@@ -35,7 +40,7 @@ class RoleRepository
      */
     public function findOrFail(int $id): Role
     {
-        return Role::query()->findOrFail($id);
+        return Role::query()->with('perangkatDaerah')->findOrFail($id);
     }
 
     /**
@@ -45,7 +50,7 @@ class RoleRepository
     {
         $role->update($data);
 
-        return $role->refresh();
+        return $role->refresh()->load('perangkatDaerah');
     }
 
     /**

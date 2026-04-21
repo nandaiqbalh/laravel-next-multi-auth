@@ -188,7 +188,10 @@ async function getMySubmissions(token: string): Promise<PaginatedPayload<Submiss
  * Usage:
  * await umkmService.createSubmission(token, { service_id: 1, document_url: "..." });
  */
-async function createSubmission(token: string, payload: { service_id: number; document_url: string }): Promise<SubmissionItem> {
+async function createSubmission(
+  token: string,
+  payload: { service_id: number; document_url?: string; form_data?: Record<string, unknown> },
+): Promise<SubmissionItem> {
   const response = await authorizedPost<SubmissionItem>(token, "/umkm/submissions", payload);
   return response.data;
 }

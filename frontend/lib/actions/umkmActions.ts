@@ -34,9 +34,9 @@ export async function saveUmkmProfileAction(payload: Partial<UmkmProfile>) {
   const token = await getTokenOrThrow();
   const profile = await umkmService.saveMyProfile(token, payload);
 
-  revalidatePath("/umkm-user/profil-umkm");
-  revalidatePath("/umkm-user/dashboard");
-  revalidatePath("/umkm-admin/data-umkm");
+  revalidatePath("/user/profil-umkm");
+  revalidatePath("/user/dashboard");
+  revalidatePath("/admin/data-umkm");
 
   return profile;
 }
@@ -52,9 +52,9 @@ export async function submitUmkmClaimAction() {
   const token = await getTokenOrThrow();
   const claim = await umkmService.submitClaim(token);
 
-  revalidatePath("/umkm-user/dashboard");
-  revalidatePath("/umkm-user/profil-umkm");
-  revalidatePath("/umkm-admin/pengajuan");
+  revalidatePath("/user/dashboard");
+  revalidatePath("/user/profil-umkm");
+  revalidatePath("/admin/pengajuan");
 
   return claim;
 }
@@ -67,13 +67,17 @@ export async function submitUmkmClaimAction() {
  * Usage:
  * await createSubmissionAction({ service_id: 1, document_url: "https://..." });
  */
-export async function createSubmissionAction(payload: { service_id: number; document_url: string }) {
+export async function createSubmissionAction(payload: {
+  service_id: number;
+  document_url?: string;
+  form_data?: Record<string, unknown>;
+}) {
   const token = await getTokenOrThrow();
   const submission = await umkmService.createSubmission(token, payload);
 
-  revalidatePath("/umkm-user/pengajuan");
-  revalidatePath("/umkm-admin/pengajuan");
-  revalidatePath("/umkm-admin/rekap");
+  revalidatePath("/user/pengajuan");
+  revalidatePath("/admin/pengajuan");
+  revalidatePath("/admin/rekap");
 
   return submission;
 }
@@ -94,9 +98,9 @@ export async function processClaimAction(
   const token = await getTokenOrThrow();
   const claim = await umkmService.processClaim(token, claimId, payload);
 
-  revalidatePath("/umkm-admin/pengajuan");
-  revalidatePath("/umkm-admin/data-umkm");
-  revalidatePath("/umkm-user/profil-umkm");
+  revalidatePath("/admin/pengajuan");
+  revalidatePath("/admin/data-umkm");
+  revalidatePath("/user/profil-umkm");
 
   return claim;
 }
@@ -117,9 +121,9 @@ export async function processSubmissionAction(
   const token = await getTokenOrThrow();
   const submission = await umkmService.processSubmission(token, submissionId, payload);
 
-  revalidatePath("/umkm-admin/pengajuan");
-  revalidatePath("/umkm-admin/rekap");
-  revalidatePath("/umkm-user/pengajuan");
+  revalidatePath("/admin/pengajuan");
+  revalidatePath("/admin/rekap");
+  revalidatePath("/user/pengajuan");
 
   return submission;
 }

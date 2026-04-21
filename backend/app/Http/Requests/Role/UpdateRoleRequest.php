@@ -30,6 +30,14 @@ class UpdateRoleRequest extends FormRequest
                 'max:50',
                 Rule::unique('roles', 'name')->ignore($this->route('role')),
             ],
+            'slug' => [
+                'nullable',
+                'string',
+                'max:120',
+                'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
+                Rule::unique('roles', 'slug')->ignore($this->route('role')),
+            ],
+            'perangkat_daerah_id' => ['nullable', 'exists:perangkat_daerahs,id'],
         ];
     }
 }

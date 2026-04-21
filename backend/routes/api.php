@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\AdminServiceController;
+use App\Http\Controllers\PerangkatDaerahController;
+use App\Http\Controllers\PublicCatalogController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ServiceFormFieldController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\UmkmAdminController;
 use App\Http\Controllers\UmkmClaimController;
@@ -12,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::get('/public/perangkat-daerah', [PublicCatalogController::class, 'perangkatDaerah']);
+Route::get('/public/layanan/{slug}', [PublicCatalogController::class, 'servicesBySlug']);
+Route::get('/public/layanan/{serviceId}/fields', [PublicCatalogController::class, 'serviceFields']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -44,9 +51,24 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/submissions/{submission}', [SubmissionController::class, 'process']);
     });
 
+    Route::middleware('role:UMKM_ADMIN,ADMIN_LAYANAN')->prefix('/umkm/admin')->group(function () {
+        Route::apiResource('services', AdminServiceController::class)
+            ->parameters(['services' => 'service'])
+            ->only(['index', 'store', 'show', 'update', 'destroy']);
+
+        Route::get('services/{serviceId}/fields', [ServiceFormFieldController::class, 'index']);
+        Route::post('services/{serviceId}/fields', [ServiceFormFieldController::class, 'store']);
+        Route::patch('services/{serviceId}/fields/reorder', [ServiceFormFieldController::class, 'reorder']);
+        Route::patch('service-fields/{fieldId}', [ServiceFormFieldController::class, 'update']);
+        Route::delete('service-fields/{fieldId}', [ServiceFormFieldController::class, 'destroy']);
+    });
+
     Route::middleware('role:SUPERADMIN')->group(function () {
         Route::apiResource('roles', RoleController::class);
         Route::apiResource('users', UserController::class);
+        Route::apiResource('perangkat-daerah', PerangkatDaerahController::class)
+            ->parameters(['perangkat-daerah' => 'perangkat_daerah'])
+            ->only(['index', 'store', 'show', 'update', 'destroy']);
         Route::get('/audit-trail', [AuditLogController::class, 'index']);
     });
 });

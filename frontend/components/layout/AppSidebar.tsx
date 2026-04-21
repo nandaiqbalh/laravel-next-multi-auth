@@ -31,7 +31,7 @@ export function AppSidebar({
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-[var(--sidebar-border)] px-5 py-6">
         <div>
-          <p className="text-base font-bold tracking-wide text-sky-800">Portal UMKM</p>
+          <p className="text-base font-bold tracking-wide text-sky-800">Portal Layanan</p>
           <p className="mt-0.5 text-xs font-medium uppercase tracking-[0.16em] text-sky-700/70">{title}</p>
         </div>
         {onClose && (
@@ -82,7 +82,7 @@ export function AppSidebar({
             {logoutLoading ? "Memproses..." : "Logout"}
           </button>
         )}
-        <p className="text-xs text-slate-400">© 2026 Portal UMKM</p>
+        <p className="text-xs text-slate-400">© 2026 Portal Layanan</p>
       </div>
     </div>
   );

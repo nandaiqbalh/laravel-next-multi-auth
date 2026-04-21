@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 /**
- * ClaimUmkmForm renders UMKM claim submit panel.
+ * ClaimUmkmForm renders business verification claim submit panel.
  * @param latestClaim Latest claim data for current user.
  * @returns JSX element.
  *
@@ -37,8 +37,8 @@ export function ClaimUmkmForm({ latestClaim }: { latestClaim: UmkmClaim | null }
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Claim UMKM</CardTitle>
-        <CardDescription>Ajukan verifikasi kepemilikan UMKM ke admin.</CardDescription>
+        <CardTitle>Claim Verifikasi Usaha</CardTitle>
+        <CardDescription>Ajukan verifikasi data usaha ke admin.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center gap-2">
@@ -51,7 +51,7 @@ export function ClaimUmkmForm({ latestClaim }: { latestClaim: UmkmClaim | null }
         {success ? <p className="text-primary">{success}</p> : null}
 
         <Button type="button" onClick={handleClaim} disabled={loading || isPending} className="bg-primary text-primary-foreground">
-          {loading ? "Mengajukan..." : "Ajukan Claim"}
+          {loading ? "Mengajukan..." : "Ajukan Verifikasi"}
         </Button>
       </CardContent>
     </Card>

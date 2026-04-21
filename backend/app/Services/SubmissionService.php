@@ -4,11 +4,14 @@ namespace App\Services;
 
 use App\Models\Submission;
 use App\Models\User;
+use App\Models\ServiceFormField;
 use App\Repositories\ServiceCatalogRepository;
 use App\Repositories\SubmissionLogRepository;
 use App\Repositories\SubmissionRepository;
 use App\Repositories\UmkmClaimRepository;
 use App\Repositories\UmkmProfileRepository;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 /**
@@ -37,7 +40,11 @@ class SubmissionService
      */
     public function serviceCatalog(): array
     {
-        return $this->serviceCatalogRepository->all()->all();
+        return $this->serviceCatalogRepository
+            ->all()
+            ->where('is_active', true)
+            ->values()
+            ->all();
     }
 
     /**
@@ -67,13 +74,27 @@ class SubmissionService
             throw new RuntimeException('Claim UMKM belum disetujui admin');
         }
 
-        $this->serviceCatalogRepository->findOrFail((int) $payload['service_id']);
+        $service = $this->serviceCatalogRepository->findOrFail((int) $payload['service_id']);
+
+        if (! $service->is_active) {
+            throw new RuntimeException('Layanan tidak aktif');
+        }
+
+        $formData = Arr::get($payload, 'form_data', []);
+        $this->validateSubmissionFormData($service->formFields->all(), is_array($formData) ? $formData : []);
+
+        $documentUrl = Arr::get($payload, 'document_url');
+
+        if (! $documentUrl && empty($formData)) {
+            throw new RuntimeException('Dokumen atau form_data wajib diisi');
+        }
 
         $submission = $this->submissionRepository->create([
             'umkm_profile_id' => $profile->id_data_badan_usaha,
             'service_id' => $payload['service_id'],
             'status' => 'diajukan',
-            'document_url' => $payload['document_url'],
+            'document_url' => $documentUrl,
+            'form_data' => $formData,
             'catatan_admin' => null,
             'submitted_at' => now(),
         ]);
@@ -176,9 +197,9 @@ class SubmissionService
      * Usage:
      * $queue = $this->submissionService->listForAdmin(20, 'dalam_proses');
      */
-    public function listForAdmin(int $perPage = 20, ?string $status = null): array
+    public function listForAdmin(int $perPage = 20, ?string $status = null, ?string $search = null): array
     {
-        $submissions = $this->submissionRepository->paginateForAdmin($perPage, $status);
+        $submissions = $this->submissionRepository->paginateForAdmin($perPage, $status, $search);
 
         return [
             'items' => $submissions->items(),
@@ -264,5 +285,78 @@ class SubmissionService
     public function summary(): array
     {
         return $this->submissionRepository->summaryCounts();
+    }
+
+    /**
+     * Validate payload against configured dynamic fields.
+     *
+     * @param array<int, ServiceFormField> $fields
+     * @param array<string, mixed> $formData
+     */
+    private function validateSubmissionFormData(array $fields, array $formData): void
+    {
+        foreach ($fields as $field) {
+            $value = Arr::get($formData, $field->name);
+
+            if ($field->is_required && ($value === null || $value === '')) {
+                throw new RuntimeException("Field {$field->label} wajib diisi");
+            }
+
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            $this->validateSubmissionFieldType($field, $value);
+        }
+    }
+
+    /**
+     * Validate one dynamic value based on field type.
+     */
+    private function validateSubmissionFieldType(ServiceFormField $field, mixed $value): void
+    {
+        $type = strtolower((string) $field->type);
+
+        if ($type === 'number' && ! is_numeric($value)) {
+            throw new RuntimeException("Field {$field->label} harus berupa angka");
+        }
+
+        if ($type === 'email' && (! is_string($value) || ! filter_var($value, FILTER_VALIDATE_EMAIL))) {
+            throw new RuntimeException("Field {$field->label} harus berupa email valid");
+        }
+
+        if ($type === 'date' && (! is_string($value) || strtotime($value) === false)) {
+            throw new RuntimeException("Field {$field->label} harus berupa tanggal valid");
+        }
+
+        if ($type === 'tel' && (! is_string($value) || ! preg_match('/^[0-9+()\-\s]{6,25}$/', $value))) {
+            throw new RuntimeException("Field {$field->label} harus berupa nomor telepon valid");
+        }
+
+        if ($type === 'file' && (! is_string($value) || ! Str::startsWith($value, ['http://', 'https://']))) {
+            throw new RuntimeException("Field {$field->label} harus berupa URL file");
+        }
+
+        if (in_array($type, ['select', 'radio'], true)) {
+            $allowedOptions = collect($field->options ?? [])
+                ->map(function ($option) {
+                    if (is_array($option)) {
+                        return (string) ($option['value'] ?? $option['label'] ?? '');
+                    }
+
+                    return (string) $option;
+                })
+                ->filter()
+                ->values()
+                ->all();
+
+            if (! in_array((string) $value, $allowedOptions, true)) {
+                throw new RuntimeException("Nilai field {$field->label} tidak valid");
+            }
+        }
+
+        if ($type === 'checkbox' && ! is_array($value)) {
+            throw new RuntimeException("Field {$field->label} harus berupa daftar nilai");
+        }
     }
 }

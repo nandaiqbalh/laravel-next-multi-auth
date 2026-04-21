@@ -20,7 +20,7 @@ export const roleRepository = {
   /**
    * Create role through admin endpoint.
    */
-  async create(token: string, payload: Pick<Role, "name">) {
+  async create(token: string, payload: Pick<Role, "name" | "slug" | "perangkat_daerah_id">) {
     const response = await httpClient.post<ApiResponse<Role>>("/roles", payload, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -31,7 +31,7 @@ export const roleRepository = {
   /**
    * Update role through admin endpoint.
    */
-  async update(token: string, id: number, payload: Pick<Role, "name">) {
+  async update(token: string, id: number, payload: Pick<Role, "name" | "slug" | "perangkat_daerah_id">) {
     const response = await httpClient.put<ApiResponse<Role>>(`/roles/${id}`, payload, {
       headers: { Authorization: `Bearer ${token}` },
     });

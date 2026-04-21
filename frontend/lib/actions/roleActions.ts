@@ -19,7 +19,7 @@ export async function getRolesAction(page = 1, search = "") {
 /**
  * Create role using admin bearer token from session.
  */
-export async function createRoleAction(payload: { name: string }) {
+export async function createRoleAction(payload: { name: string; slug: string; perangkat_daerah_id?: number | null }) {
   const session = await auth();
 
   if (!session?.token) {
@@ -32,7 +32,7 @@ export async function createRoleAction(payload: { name: string }) {
 /**
  * Update role using admin bearer token from session.
  */
-export async function updateRoleAction(id: number, payload: { name: string }) {
+export async function updateRoleAction(id: number, payload: { name: string; slug: string; perangkat_daerah_id?: number | null }) {
   const session = await auth();
 
   if (!session?.token) {

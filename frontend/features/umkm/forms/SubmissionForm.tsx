@@ -45,7 +45,7 @@ export function SubmissionForm({ services }: { services: ServiceItem[] }) {
     <Card>
       <CardHeader>
         <CardTitle>Ajukan Layanan</CardTitle>
-        <CardDescription>Pengajuan hanya bisa dilakukan setelah claim UMKM disetujui admin.</CardDescription>
+        <CardDescription>Pengajuan hanya bisa dilakukan setelah claim verifikasi disetujui admin.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">

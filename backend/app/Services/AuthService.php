@@ -23,7 +23,8 @@ class AuthService
     public function register(array $payload): array
     {
         if (empty($payload['role_id'])) {
-            $payload['role_id'] = Role::query()->where('name', 'UMKM_USER')->value('id');
+            $payload['role_id'] = Role::query()->where('slug', 'umkm-user')->value('id')
+                ?? Role::query()->where('name', 'UMKM_USER')->value('id');
 
             if (! $payload['role_id']) {
                 throw new RuntimeException('Default UMKM role not found');
