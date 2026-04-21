@@ -1,18 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { CaretDown, SignOut } from "@phosphor-icons/react";
+import { CaretDown, SignOut, ChartLine, ShieldCheck, ShieldStar, Users } from "@phosphor-icons/react";
 import { type ComponentType, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 
 export type SidebarIcon = ComponentType<{ className?: string }>;
+export type SidebarIconKey = "ChartLine" | "ShieldCheck" | "ShieldStar" | "Users";
 
 export type SidebarNavItem = {
   label: string;
   href?: string;
-  icon?: SidebarIcon;
+  icon?: SidebarIcon | SidebarIconKey;
   children?: SidebarNavItem[];
+};
+
+const ICON_MAP: Record<SidebarIconKey, SidebarIcon> = {
+  ChartLine,
+  ShieldCheck,
+  ShieldStar,
+  Users,
 };
 
 /**
@@ -78,7 +86,7 @@ export function Sidebar({
         {items.map((item) => {
           if (item.children?.length) {
             const parentActive = item.children.some((child) => isActivePath(pathname, child.href));
-            const Icon = item.icon;
+            const Icon = item.icon && typeof item.icon === "string" ? ICON_MAP[item.icon] : item.icon;
 
             return (
               <div key={item.label} className="space-y-1">
@@ -102,7 +110,7 @@ export function Sidebar({
                 {expanded[item.label] && (
                   <div className="ml-3 space-y-1 border-l border-[var(--border)] pl-3">
                     {item.children.map((child) => {
-                      const ChildIcon = child.icon;
+                      const ChildIcon = child.icon && typeof child.icon === "string" ? ICON_MAP[child.icon] : child.icon;
                       const active = isActivePath(pathname, child.href);
 
                       return child.href ? (
@@ -128,7 +136,7 @@ export function Sidebar({
             );
           }
 
-          const Icon = item.icon;
+          const Icon = item.icon && typeof item.icon === "string" ? ICON_MAP[item.icon] : item.icon;
           const active = isActivePath(pathname, item.href);
 
           return item.href ? (

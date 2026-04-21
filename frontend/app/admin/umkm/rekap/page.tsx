@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/features/umkm/components/StatCard";
 import { umkmService } from "@/features/umkm/services/umkmService";
 
@@ -8,7 +8,6 @@ export const metadata = {
   title: 'Rekap Pengajuan UMKM',
   description: 'Lihat rekapitulasi status pengajuan UMKM.',
 };
-
 
 /**
  * Rekap page for UMKM admin.
@@ -23,13 +22,8 @@ export default async function AdminRekapPage() {
   const summary = await umkmService.getAdminRekap(session.token);
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Rekap UMKM</CardTitle>
-          <CardDescription>Rekap profil, claim, dan pengajuan layanan.</CardDescription>
-        </CardHeader>
-      </Card>
+    <div className="space-y-6">
+      <PageHeader title="Rekap UMKM" description="Rekap profil, claim, dan pengajuan layanan." />
 
       <section className="grid gap-4 md:grid-cols-3">
         <StatCard title="Profil Verified" value={summary.profiles.verified} />

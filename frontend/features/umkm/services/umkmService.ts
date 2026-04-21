@@ -215,9 +215,10 @@ async function getAdminDashboard(token: string): Promise<DashboardSummary> {
  * Usage:
  * await umkmService.getAdminUmkmData(token, "kopi");
  */
-async function getAdminUmkmData(token: string, search = ""): Promise<PaginatedPayload<UmkmProfile>> {
+async function getAdminUmkmData(token: string, search = "", page = 1): Promise<PaginatedPayload<UmkmProfile>> {
   const response = await authorizedGet<PaginatedPayload<UmkmProfile>>(token, "/umkm/admin/data-umkm", {
     search,
+    page,
   });
   return response.data;
 }
@@ -231,9 +232,10 @@ async function getAdminUmkmData(token: string, search = ""): Promise<PaginatedPa
  * Usage:
  * await umkmService.getAdminClaims(token, "pending");
  */
-async function getAdminClaims(token: string, status = ""): Promise<PaginatedPayload<UmkmClaim>> {
+async function getAdminClaims(token: string, search = "", page = 1): Promise<PaginatedPayload<UmkmClaim>> {
   const response = await authorizedGet<PaginatedPayload<UmkmClaim>>(token, "/umkm/admin/claims", {
-    status,
+    search,
+    page,
   });
   return response.data;
 }
@@ -262,9 +264,10 @@ async function processClaim(token: string, claimId: number, payload: { status: "
  * Usage:
  * await umkmService.getAdminSubmissions(token, "dalam_proses");
  */
-async function getAdminSubmissions(token: string, status = ""): Promise<PaginatedPayload<SubmissionItem>> {
+async function getAdminSubmissions(token: string, search = "", page = 1): Promise<PaginatedPayload<SubmissionItem>> {
   const response = await authorizedGet<PaginatedPayload<SubmissionItem>>(token, "/umkm/admin/submissions", {
-    status,
+    search,
+    page,
   });
   return response.data;
 }

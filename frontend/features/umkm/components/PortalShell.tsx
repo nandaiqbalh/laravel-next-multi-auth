@@ -47,11 +47,24 @@ export function PortalShell({
     ],
     UMKM_ADMIN: [
       { href: "/admin/umkm/dashboard", label: "Dashboard", icon: ChartLine },
-      { href: "/admin/umkm/data-umkm", label: "Data UMKM", icon: Buildings },
-      { href: "/admin/umkm/pengajuan", label: "Pengajuan", icon: ClipboardText },
+      {
+        label: "Profil",
+        icon: Buildings,
+        children: [
+          { href: "/admin/umkm/validasi-profil", label: "Validasi Profil", icon: IdentificationCard },
+          { href: "/admin/umkm/data-umkm", label: "Data UMKM", icon: Buildings },
+        ],
+      },
+      { href: "/admin/umkm/pengajuan", label: "Daftar Pengajuan", icon: ClipboardText },
       { href: "/admin/umkm/rekap", label: "Rekap", icon: Stack },
-      { href: "/admin/umkm/user", label: "User", icon: Users },
-      { href: "/admin/umkm/audit-trail", label: "Audit Trail", icon: FileText },
+      {
+        label: "Sistem",
+        icon: ShieldCheck,
+        children: [
+          { href: "/admin/umkm/user", label: "User", icon: Users },
+          { href: "/admin/umkm/audit-trail", label: "Audit Trail", icon: FileText },
+        ],
+      },
     ],
     SUPERADMIN: [
       { href: "/superadmin/dashboard", label: "Dashboard", icon: ChartLine },
