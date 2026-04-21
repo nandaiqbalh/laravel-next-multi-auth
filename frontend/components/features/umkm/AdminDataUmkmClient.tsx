@@ -51,7 +51,7 @@ export function AdminDataUmkmClient({ initialData, token }: AdminDataUmkmClientP
     <div className="space-y-4">
       {error && <ErrorBanner message={error} />}
 
-      <div className="flex flex-col gap-4 rounded-lg border border-[var(--border)] bg-white p-4 md:p-6">
+      <div className="rounded-lg border border-[var(--border)] bg-white p-4 md:p-6">
         <div className="flex flex-col gap-4 pb-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="w-full max-w-xs sm:w-auto">
             <SearchInput
