@@ -45,7 +45,9 @@ export default auth((req: any) => {
   const isSuperadminArea = pathname.startsWith("/superadmin");
 
   if (!isLoggedIn && (isUserArea || isAdminArea || isSuperadminArea)) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    const loginUrl = new URL("/login", req.url);
+    loginUrl.searchParams.set("callbackUrl", req.nextUrl.href);
+    return NextResponse.redirect(loginUrl);
   }
 
   if (isSuperadminArea && roleScope !== "superadmin") {

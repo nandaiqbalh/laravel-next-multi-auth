@@ -11,10 +11,13 @@ import { normalizeRoleSlug, resolveRoleHomePath, resolveRoleScope } from "@/feat
  * Usage:
  * const ctx = await requireRole(["UMKM_ADMIN"]);
  */
-export async function requireRole(allowed: RoleName[]) {
+export async function requireRole(allowed: RoleName[], callbackUrl?: string) {
   const session = await auth();
 
   if (!session?.token) {
+    if (callbackUrl) {
+      redirect(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+    }
     redirect("/login");
   }
 

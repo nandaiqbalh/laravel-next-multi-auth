@@ -11,6 +11,7 @@ use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\UmkmAdminController;
 use App\Http\Controllers\UmkmClaimController;
 use App\Http\Controllers\UmkmProfileController;
+use App\Http\Controllers\UmkmProfileHistoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('role:UMKM_USER')->group(function () {
         Route::get('/umkm/profile/me', [UmkmProfileController::class, 'me']);
-        Route::post('/umkm/profile', [UmkmProfileController::class, 'upsert']);
+        Route::get('/umkm/profile/by-nik', [UmkmProfileController::class, 'byNik']);
+        Route::post('/umkm/profile/update-request', [UmkmProfileHistoryController::class, 'submit']);
+        Route::get('/umkm/profile/history', [UmkmProfileHistoryController::class, 'history']);
 
         Route::post('/umkm/claims', [UmkmClaimController::class, 'store']);
         Route::get('/umkm/claims/latest', [UmkmClaimController::class, 'latest']);
@@ -49,6 +52,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/claims/{claim}', [UmkmClaimController::class, 'process']);
         Route::get('/submissions', [SubmissionController::class, 'indexForAdmin']);
         Route::patch('/submissions/{submission}', [SubmissionController::class, 'process']);
+
+        Route::get('/umkm/profile/history', [UmkmProfileHistoryController::class, 'adminIndex']);
+        Route::post('/umkm/profile/history/{id}/approve', [UmkmProfileHistoryController::class, 'approve']);
+        Route::post('/umkm/profile/history/{id}/reject', [UmkmProfileHistoryController::class, 'reject']);
     });
 
     Route::middleware('role:UMKM_ADMIN,ADMIN_LAYANAN')->prefix('/umkm/admin')->group(function () {

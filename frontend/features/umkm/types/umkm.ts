@@ -59,7 +59,7 @@ export type UserItem = {
  */
 export type UmkmProfile = {
   id_data_badan_usaha: string;
-  user_id: string;
+  user_id?: string | null;
   nik_pengusaha: string;
   nama_pengusaha: string;
   nib?: string | null;
@@ -110,6 +110,25 @@ export type UmkmProfile = {
   verified_at?: string | null;
   created_at?: string;
   updated_at?: string;
+};
+
+/**
+ * UmkmProfileHistory models profile change request payload.
+ */
+export type UmkmProfileHistory = {
+  id: number;
+  umkm_profile_id: string;
+  payload: Partial<UmkmProfile>;
+  status: "pending" | "approved" | "rejected";
+  catatan_admin?: string | null;
+  created_by: string;
+  approved_by?: string | null;
+  approved_at?: string | null;
+  created_at: string;
+  updated_at?: string | null;
+  profile?: UmkmProfile | null;
+  creator?: UserItem | null;
+  approver?: UserItem | null;
 };
 
 /**

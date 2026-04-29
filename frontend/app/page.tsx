@@ -27,7 +27,7 @@ export default async function HomePage() {
             {session ? (
               <Link
                 href={dashboardHref}
-                className="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-semibold text-gray-600 hover:bg-sky-700"
+                className="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-semibold text-gray-600 hover:bg-sky-700 !text-white"
               >
                 Dashboard
               </Link>
@@ -38,7 +38,7 @@ export default async function HomePage() {
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-semibold text-gray-600 hover:bg-sky-700"
+                  className="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-semibold text-gray-600 hover:bg-sky-700 !text-white"
                 >
                   Daftar
                 </Link>

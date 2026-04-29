@@ -1,12 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-/**
- * Generic confirmation dialog for destructive or important actions.
- */
 export function ConfirmDialog({
   open,
   title,
@@ -32,30 +28,43 @@ export function ConfirmDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onCancel()}>
-      <DialogContent showCloseButton={false}>
-        <DialogHeader>
+      <DialogContent showCloseButton={false} className="gap-0 overflow-hidden rounded-2xl border border-gray-100 p-0 shadow-sm">
 
-          <DialogTitle>{title}</DialogTitle>
-          {icon ? (
-            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+        <DialogHeader className="px-6 pb-5 pt-6">
+          {icon && (
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-500">
               {icon}
             </div>
-          ) : null}
-          <DialogDescription>{description}</DialogDescription>
+          )}
+          <DialogTitle className="text-base font-semibold text-slate-900">
+            {title}
+          </DialogTitle>
+          <DialogDescription className="mt-1 text-sm text-slate-400">
+            {description}
+          </DialogDescription>
         </DialogHeader>
 
         {actions ? (
-          <div className="mt-6">{actions}</div>
+          <div className="border-t border-gray-100 px-6 py-4">{actions}</div>
         ) : (
-          <DialogFooter className="mt-4 gap-2">
-            <Button variant="outline" onClick={onCancel} disabled={loading}>
+          <DialogFooter className="flex flex-row items-center gap-2 border-t border-gray-100 px-6 py-4">
+            <button
+              onClick={onCancel}
+              disabled={loading}
+              className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:opacity-50"
+            >
               {cancelLabel}
-            </Button>
-            <Button onClick={onConfirm} disabled={loading}>
+            </button>
+            <button
+              onClick={onConfirm}
+              disabled={loading}
+              className="flex-1 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:opacity-50"
+            >
               {loading ? "Memproses..." : confirmLabel}
-            </Button>
+            </button>
           </DialogFooter>
         )}
+
       </DialogContent>
     </Dialog>
   );

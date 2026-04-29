@@ -31,6 +31,22 @@ class UmkmProfileController extends Controller
     }
 
     /**
+     * Return UMKM profile matched by authenticated user's NIK.
+     *
+     * @param void
+     * @returns \Illuminate\Http\JsonResponse
+     *
+     * Usage:
+     * GET /api/umkm/profile/by-nik
+     */
+    public function byNik()
+    {
+        $profile = $this->umkmProfileService->profileByNik(request()->user());
+
+        return $this->successResponse('Profil UMKM fetched', $profile);
+    }
+
+    /**
      * Create or update authenticated user's UMKM profile.
      *
      * @param UpsertUmkmProfileRequest $request

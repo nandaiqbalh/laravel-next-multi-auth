@@ -2,7 +2,7 @@
 
 import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { ErrorBanner } from "@/components/common/ErrorBanner";
 import { FormField } from "@/components/common/FormField";
@@ -20,6 +20,7 @@ const FEATURES = [
 
 export default function LoginClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -41,11 +42,16 @@ export default function LoginClient() {
     }
 
     const session = await getSession();
-    const targetHref = resolveRoleHomePath(session?.user?.roleSlug, session?.user?.role);
+    const callbackUrl = searchParams.get("callbackUrl")?.trim();
+    const targetHref = callbackUrl || resolveRoleHomePath(session?.user?.roleSlug, session?.user?.role);
 
     try {
-      router.push(targetHref);
-      router.refresh();
+      if (callbackUrl && /^https?:/i.test(callbackUrl)) {
+        window.location.assign(callbackUrl);
+      } else {
+        router.push(targetHref);
+        router.refresh();
+      }
     } catch {
       window.location.assign(targetHref);
     }

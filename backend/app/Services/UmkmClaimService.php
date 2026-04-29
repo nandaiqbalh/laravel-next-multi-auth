@@ -32,10 +32,19 @@ class UmkmClaimService
      */
     public function submit(User $user): UmkmClaim
     {
-        $profile = $this->umkmProfileRepository->findByUserId($user->id);
+        $profile = $this->umkmProfileRepository->findByUserId($user->id)
+            ?? $this->umkmProfileRepository->findByNikPengusaha($user->nik);
 
         if (! $profile) {
             throw new RuntimeException('Profil UMKM belum diisi');
+        }
+
+        if ($profile->user_id && $profile->user_id !== $user->id) {
+            throw new RuntimeException('Profil UMKM sudah terkait pengguna lain');
+        }
+
+        if (! $profile->user_id) {
+            $profile = $this->umkmProfileRepository->attachUser($profile, $user->id);
         }
 
         if ($this->umkmClaimRepository->hasPendingByProfileId($profile->id_data_badan_usaha)) {
@@ -72,9 +81,14 @@ class UmkmClaimService
      */
     public function latestForUser(User $user): ?UmkmClaim
     {
-        $profile = $this->umkmProfileRepository->findByUserId($user->id);
+        $profile = $this->umkmProfileRepository->findByUserId($user->id)
+            ?? $this->umkmProfileRepository->findByNikPengusaha($user->nik);
 
         if (! $profile) {
+            return null;
+        }
+
+        if ($profile->user_id && $profile->user_id !== $user->id) {
             return null;
         }
 

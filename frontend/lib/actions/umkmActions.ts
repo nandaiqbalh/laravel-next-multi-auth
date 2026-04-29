@@ -23,22 +23,34 @@ async function getTokenOrThrow(): Promise<string> {
 }
 
 /**
- * Save UMKM profile and refresh related user/admin pages.
+ * Submit UMKM profile change request and refresh related pages.
  * @param payload UMKM profile payload.
- * @returns Saved profile object.
+ * @returns Created history object.
  *
  * Usage:
- * await saveUmkmProfileAction(payload);
+ * await submitUmkmProfileUpdateAction(payload);
  */
-export async function saveUmkmProfileAction(payload: Partial<UmkmProfile>) {
+export async function submitUmkmProfileUpdateAction(payload: Partial<UmkmProfile>) {
   const token = await getTokenOrThrow();
-  const profile = await umkmService.saveMyProfile(token, payload);
+  const history = await umkmService.submitProfileUpdateRequest(token, payload);
 
   revalidatePath("/user/profil-umkm");
   revalidatePath("/user/dashboard");
-  revalidatePath("/admin/data-umkm");
+  revalidatePath("/admin/umkm/profile/history");
 
-  return profile;
+  return history;
+}
+
+/**
+ * Fetch UMKM profile by authenticated user's NIK.
+ * @returns Profile or null when not found.
+ *
+ * Usage:
+ * const profile = await getProfileByNikAction();
+ */
+export async function getProfileByNikAction() {
+  const token = await getTokenOrThrow();
+  return umkmService.getProfileByNik(token);
 }
 
 /**
@@ -103,6 +115,33 @@ export async function processClaimAction(
   revalidatePath("/user/profil-umkm");
 
   return claim;
+}
+
+/**
+ * Approve UMKM profile change request and refresh pages.
+ */
+export async function approveUmkmProfileHistoryAction(historyId: number) {
+  const token = await getTokenOrThrow();
+  const history = await umkmService.approveProfileHistory(token, historyId);
+
+  revalidatePath("/admin/umkm/profile/history");
+  revalidatePath("/admin/data-umkm");
+  revalidatePath("/user/profil-umkm");
+
+  return history;
+}
+
+/**
+ * Reject UMKM profile change request and refresh pages.
+ */
+export async function rejectUmkmProfileHistoryAction(historyId: number, payload: { catatan_admin?: string }) {
+  const token = await getTokenOrThrow();
+  const history = await umkmService.rejectProfileHistory(token, historyId, payload);
+
+  revalidatePath("/admin/umkm/profile/history");
+  revalidatePath("/user/profil-umkm");
+
+  return history;
 }
 
 /**

@@ -2,7 +2,7 @@
 
 import { FormEvent } from "react";
 import { ZodError } from "zod";
-import { saveUmkmProfileAction } from "../../../lib/actions/umkmActions";
+import { submitUmkmProfileUpdateAction } from "../../../lib/actions/umkmActions";
 import { umkmProfileSchema } from "@/validations/umkm-profile.schema.validation";
 import { ErrorBanner } from "@/components/common/ErrorBanner";
 import { SuccessBanner } from "@/components/common/SuccessBanner";
@@ -102,7 +102,7 @@ export function UmkmProfileForm({ initialProfile }: { initialProfile?: UmkmProfi
       const validated = umkmProfileSchema.parse(payload);
 
       await run(async () => {
-        await saveUmkmProfileAction(validated);
+        await submitUmkmProfileUpdateAction(validated);
       });
     } catch (caughtError) {
       if (caughtError instanceof ZodError) {
@@ -129,7 +129,7 @@ export function UmkmProfileForm({ initialProfile }: { initialProfile?: UmkmProfi
 
         <div className="flex justify-end border-t border-border/60 pt-4">
           <Button type="submit" disabled={loading}>
-            {loading ? "Menyimpan..." : "Simpan Profil UMKM"}
+            {loading ? "Mengajukan..." : "Ajukan Perubahan Profil"}
           </Button>
         </div>
       </div>

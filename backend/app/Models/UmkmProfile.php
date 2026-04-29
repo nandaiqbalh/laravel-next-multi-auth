@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\UmkmProfileHistory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -148,5 +149,19 @@ class UmkmProfile extends Model
     public function submissions(): HasMany
     {
         return $this->hasMany(Submission::class, 'umkm_profile_id', 'id_data_badan_usaha');
+    }
+
+    /**
+     * Get profile change request histories.
+     *
+     * @param void
+     * @returns HasMany
+     *
+     * Usage:
+     * $profile->histories()->latest('created_at')->get();
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(UmkmProfileHistory::class, 'umkm_profile_id', 'id_data_badan_usaha');
     }
 }

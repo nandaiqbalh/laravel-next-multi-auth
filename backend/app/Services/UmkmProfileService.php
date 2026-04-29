@@ -32,6 +32,21 @@ class UmkmProfileService
     }
 
     /**
+     * Return UMKM profile by matching user NIK.
+     *
+     * @param User $user
+     * @returns UmkmProfile|null
+     */
+    public function profileByNik(User $user): ?UmkmProfile
+    {
+        if (! $user->nik) {
+            return null;
+        }
+
+        return $this->umkmProfileRepository->findByNikPengusaha($user->nik);
+    }
+
+    /**
      * Upsert authenticated user's UMKM profile.
      *
      * @param User $user

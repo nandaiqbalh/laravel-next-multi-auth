@@ -10,6 +10,7 @@ import type {
   SubmissionItem,
   UmkmClaim,
   UmkmProfile,
+  UmkmProfileHistory,
   UserItem,
 } from "@/features/umkm/types/umkm";
 
@@ -64,7 +65,7 @@ async function authorizedGet<T>(token: string, url: string, params?: Record<stri
  * @returns API envelope payload.
  *
  * Usage:
- * const res = await authorizedPost<MyType>(token, "/umkm/profile", payload);
+ * const res = await authorizedPost<MyType>(token, "/path", payload);
  */
 async function authorizedPost<T>(token: string, url: string, payload: unknown): Promise<ApiEnvelope<T>> {
   try {
@@ -114,16 +115,39 @@ async function getMyProfile(token: string): Promise<UmkmProfile | null> {
 }
 
 /**
- * Save UMKM profile payload for authenticated user.
+ * Fetch UMKM profile by authenticated user's NIK.
  * @param token Bearer token from session.
- * @param payload UMKM profile data.
- * @returns Saved UMKM profile.
+ * @returns Profile or null if not found.
  *
  * Usage:
- * await umkmService.saveMyProfile(token, payload);
+ * const profile = await umkmService.getProfileByNik(token);
  */
-async function saveMyProfile(token: string, payload: Partial<UmkmProfile>): Promise<UmkmProfile> {
-  const response = await authorizedPost<UmkmProfile>(token, "/umkm/profile", payload);
+async function getProfileByNik(token: string): Promise<UmkmProfile | null> {
+  const response = await authorizedGet<UmkmProfile | null>(token, "/umkm/profile/by-nik");
+  return response.data;
+}
+
+/**
+ * Submit UMKM profile change request for authenticated user.
+ * @param token Bearer token from session.
+ * @param payload UMKM profile data.
+ * @returns Created profile history request.
+ *
+ * Usage:
+ * await umkmService.submitProfileUpdateRequest(token, payload);
+ */
+async function submitProfileUpdateRequest(token: string, payload: Partial<UmkmProfile>): Promise<UmkmProfileHistory> {
+  const response = await authorizedPost<UmkmProfileHistory>(token, "/umkm/profile/update-request", payload);
+  return response.data;
+}
+
+/**
+ * Fetch profile change history for authenticated user.
+ * @param token Bearer token from session.
+ * @returns Paginated history payload.
+ */
+async function getMyProfileHistory(token: string): Promise<PaginatedPayload<UmkmProfileHistory>> {
+  const response = await authorizedGet<PaginatedPayload<UmkmProfileHistory>>(token, "/umkm/profile/history");
   return response.data;
 }
 
@@ -240,6 +264,36 @@ async function getAdminClaims(token: string, search = "", page = 1): Promise<Pag
     search,
     page,
   });
+  return response.data;
+}
+
+/**
+ * Fetch admin UMKM profile history queue.
+ * @param token Bearer token from session.
+ * @param status Optional status filter.
+ * @returns Paginated history payload.
+ */
+async function getAdminProfileHistory(token: string, status = "", page = 1): Promise<PaginatedPayload<UmkmProfileHistory>> {
+  const response = await authorizedGet<PaginatedPayload<UmkmProfileHistory>>(token, "/umkm/admin/umkm/profile/history", {
+    status: status || undefined,
+    page,
+  });
+  return response.data;
+}
+
+/**
+ * Approve UMKM profile history request.
+ */
+async function approveProfileHistory(token: string, historyId: number): Promise<UmkmProfileHistory> {
+  const response = await authorizedPost<UmkmProfileHistory>(token, `/umkm/admin/umkm/profile/history/${historyId}/approve`, {});
+  return response.data;
+}
+
+/**
+ * Reject UMKM profile history request.
+ */
+async function rejectProfileHistory(token: string, historyId: number, payload: { catatan_admin?: string }): Promise<UmkmProfileHistory> {
+  const response = await authorizedPost<UmkmProfileHistory>(token, `/umkm/admin/umkm/profile/history/${historyId}/reject`, payload);
   return response.data;
 }
 
@@ -384,7 +438,9 @@ async function getSuperadminAuditTrail(token: string, page = 1): Promise<Paginat
  */
 export const umkmService = {
   getMyProfile,
-  saveMyProfile,
+  getProfileByNik,
+  submitProfileUpdateRequest,
+  getMyProfileHistory,
   submitClaim,
   getLatestClaim,
   getServices,
@@ -393,6 +449,9 @@ export const umkmService = {
   getAdminDashboard,
   getAdminUmkmData,
   getAdminClaims,
+  getAdminProfileHistory,
+  approveProfileHistory,
+  rejectProfileHistory,
   processClaim,
   getAdminSubmissions,
   processSubmission,
