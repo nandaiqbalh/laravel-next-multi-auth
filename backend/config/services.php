@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'umkm_sidt' => [
+        'base_url' => env('UMKM_SIDT_BASE_URL', 'https://api-splp.layanan.go.id/SIDT_UMKM_PROVINSI_KABKOT/1/api'),
+        'endpoint' => env('UMKM_SIDT_ENDPOINT', '/umkm-provinsi/getDataPerWilayah'),
+        'x_api_token' => env('UMKM_SIDT_X_API_TOKEN'),
+        'bearer_token' => env('UMKM_SIDT_BEARER_TOKEN'),
+        'timeout' => (int) env('UMKM_SIDT_TIMEOUT', 30),
+    ],
+
 ];
